@@ -19,6 +19,9 @@ p {
   vertical-align: text-top;
   padding-right: 2em;
 }
+.changelog td:nth-child(1) {
+  width: 10em;
+}
 
 .overview_content_area {
 
