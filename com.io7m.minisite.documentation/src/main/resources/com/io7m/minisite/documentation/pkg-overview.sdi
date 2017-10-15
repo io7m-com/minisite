@@ -2,4 +2,4 @@
 [subsection [title Overview] [id pkg.orientation.overview]]
 [paragraph]
 The [term [type package] ${project.parent.name}] package implements
-something.
+a trivial replacement for the Maven site plugin.
