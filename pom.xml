@@ -104,13 +104,13 @@
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
-        <artifactId>io7m-changelog-core</artifactId>
-        <version>3.0.3</version>
+        <artifactId>com.io7m.changelog.core</artifactId>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
-        <artifactId>io7m-changelog-xom</artifactId>
-        <version>3.0.3</version>
+        <artifactId>com.io7m.changelog.xom</artifactId>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.xom</groupId>

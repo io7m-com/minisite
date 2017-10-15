@@ -36,11 +36,11 @@
     </dependency>
     <dependency>
       <groupId>com.io7m.changelog</groupId>
-      <artifactId>io7m-changelog-core</artifactId>
+      <artifactId>com.io7m.changelog.core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.io7m.changelog</groupId>
-      <artifactId>io7m-changelog-xom</artifactId>
+      <artifactId>com.io7m.changelog.xom</artifactId>
     </dependency>
 
     <dependency>
