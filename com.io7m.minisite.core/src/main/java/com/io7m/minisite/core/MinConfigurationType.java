@@ -16,7 +16,9 @@
 
 package com.io7m.minisite.core;
 
+import io.vavr.collection.Vector;
 import org.immutables.value.Value;
+import org.immutables.vavr.encodings.VavrEncodingEnabled;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -26,6 +28,7 @@ import java.util.Optional;
  */
 
 @Value.Immutable
+@VavrEncodingEnabled
 @MinImmutableStyleType
 public interface MinConfigurationType
 {
@@ -35,6 +38,20 @@ public interface MinConfigurationType
 
   @Value.Parameter
   String projectName();
+
+  /**
+   * @return The group name of the project
+   */
+
+  @Value.Parameter
+  String projectGroupName();
+
+  /**
+   * @return The project modules
+   */
+
+  @Value.Parameter
+  Vector<String> projectModules();
 
   /**
    * @return The version number of the current release

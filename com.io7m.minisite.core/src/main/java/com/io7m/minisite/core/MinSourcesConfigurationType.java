@@ -17,6 +17,7 @@
 package com.io7m.minisite.core;
 
 import org.immutables.value.Value;
+import org.immutables.vavr.encodings.VavrEncodingEnabled;
 
 import java.net.URI;
 
@@ -25,6 +26,7 @@ import java.net.URI;
  */
 
 @Value.Immutable
+@VavrEncodingEnabled
 @MinImmutableStyleType
 public interface MinSourcesConfigurationType
 {

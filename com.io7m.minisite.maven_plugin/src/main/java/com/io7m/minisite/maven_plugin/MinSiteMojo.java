@@ -26,6 +26,7 @@ import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
 import com.io7m.minisite.core.MinXHTMLReindent;
+import io.vavr.collection.Vector;
 import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.ParsingException;
@@ -160,6 +161,8 @@ public final class MinSiteMojo extends AbstractMojo
     final MinConfiguration config =
       MinConfiguration.builder()
         .setProjectName(this.project.getName())
+        .setProjectGroupName(this.project.getGroupId())
+        .setProjectModules(this.modules())
         .setRelease(this.project.getVersion())
         .setSources(this.sources())
         .setLicense(this.license())
@@ -234,6 +237,15 @@ public final class MinSiteMojo extends AbstractMojo
         throw new UncheckedIOException(new IOException(e));
       }
     });
+  }
+
+  private Vector<String> modules()
+  {
+    /// XXX: Possibly incorrect assumptions:
+    /// 1. Module names match their artifact IDs.
+    /// 2. Module groupIds match that of their parent module.
+    /// 3. Modules don't have child modules.
+    return Vector.ofAll(this.project.getModules());
   }
 
   private Optional<Path> features()

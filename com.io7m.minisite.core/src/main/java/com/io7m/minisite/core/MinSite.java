@@ -226,6 +226,11 @@ public final class MinSite
     return MinXHTML.link("#features", "Features");
   }
 
+  private static Element contentsMavenLink()
+  {
+    return MinXHTML.link("#maven", "Maven");
+  }
+
   private static Element css()
   {
     final Element style = new Element("style", MinXHTML.XHTML);
@@ -320,6 +325,7 @@ public final class MinSite
 
     main.appendChild(this.releases());
     main.appendChild(this.documentation());
+    main.appendChild(this.maven());
 
     this.config.changelog().ifPresent(
       changelog -> main.appendChild(changelog(changelog)));
@@ -331,6 +337,109 @@ public final class MinSite
       tracker -> main.appendChild(bugTracker(tracker)));
 
     return main;
+  }
+
+  private Element maven()
+  {
+    final Element maven = new Element("div", MinXHTML.XHTML);
+    maven.addAttribute(new Attribute("id", "maven"));
+    maven.appendChild(MinXHTML.h2("Maven"));
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild(
+        "The following is a complete list of the project's modules expressed as Maven dependencies: ");
+      maven.appendChild(p);
+    }
+
+    {
+      final Element pre = new Element("pre", MinXHTML.XHTML);
+      final String group = this.config.projectGroupName();
+      final String version = this.config.release();
+      mavenDependency(pre, this.config.projectName(), group, version);
+      for (final String module : this.config.projectModules()) {
+        mavenDependency(pre, module, group, version);
+      }
+      maven.appendChild(pre);
+    }
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild("Each release of the project is made available on ");
+      p.appendChild(MinXHTML.link("http://search.maven.org", "Maven Central"));
+      p.appendChild(" within ten minutes of the release announcement.");
+      maven.appendChild(p);
+    }
+
+    return maven;
+  }
+
+  private static void mavenDependency(
+    final Element pre,
+    final String module,
+    final String group,
+    final String version)
+  {
+    final String link_group =
+      new StringBuilder(64)
+        .append("http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22")
+        .append(group)
+        .append("%22")
+        .toString();
+
+    final String link_artifact =
+      new StringBuilder(64)
+        .append("http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22")
+        .append(module)
+        .append("%22")
+        .toString();
+
+    final String link_version =
+      new StringBuilder(64)
+        .append("http://search.maven.org/#artifactdetails%7C")
+        .append(group)
+        .append("%7C")
+        .append(module)
+        .append("%7C")
+        .append(version)
+        .append("%7Cjar")
+        .toString();
+
+    pre.appendChild(
+      new StringBuilder(64)
+        .append("<dependency>")
+        .append(System.lineSeparator())
+        .append("  <groupId>")
+        .toString());
+
+    pre.appendChild(MinXHTML.link(link_group, group));
+
+    pre.appendChild(
+      new StringBuilder(64)
+        .append("</groupId>")
+        .append(System.lineSeparator())
+        .append("  <artifactId>")
+        .toString());
+
+    pre.appendChild(MinXHTML.link(link_artifact, module));
+
+    pre.appendChild(
+      new StringBuilder(64)
+        .append("</artifactId>")
+        .append(System.lineSeparator())
+        .append("  <version>")
+        .toString());
+
+    pre.appendChild(MinXHTML.link(link_version, module));
+
+    pre.appendChild(
+      new StringBuilder(64)
+        .append("</version>")
+        .append(System.lineSeparator())
+        .append("</dependency>")
+        .append(System.lineSeparator())
+        .append(System.lineSeparator())
+        .toString());
   }
 
   private Element documentation()
@@ -459,6 +568,7 @@ public final class MinSite
       path -> contents.appendChild(MinXHTML.listItem(contentsFeaturesLink())));
     contents.appendChild(MinXHTML.listItem(contentsReleasesLink()));
     contents.appendChild(MinXHTML.listItem(contentsDocumentationLink()));
+    contents.appendChild(MinXHTML.listItem(contentsMavenLink()));
     this.config.changelog().ifPresent(
       path -> contents.appendChild(MinXHTML.listItem(contentsChangesLink())));
     this.config.sources().ifPresent(

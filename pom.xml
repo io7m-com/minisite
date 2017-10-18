@@ -119,7 +119,7 @@
       </dependency>
       <dependency>
         <groupId>io.vavr</groupId>
-        <artifactId>vavr-io</artifactId>
+        <artifactId>vavr</artifactId>
         <version>0.9.1</version>
       </dependency>
       <dependency>
@@ -127,7 +127,11 @@
         <artifactId>value</artifactId>
         <version>2.5.6</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.immutables.vavr</groupId>
+        <artifactId>vavr-encodings</artifactId>
+        <version>0.4.0</version>
+      </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
