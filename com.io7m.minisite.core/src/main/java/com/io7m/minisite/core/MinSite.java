@@ -575,7 +575,7 @@ public final class MinSite
       sources -> contents.appendChild(MinXHTML.listItem(contentsSourcesLink())));
     this.config.license().ifPresent(
       path -> contents.appendChild(MinXHTML.listItem(contentsLicenseLink())));
-    this.config.features().ifPresent(
+    this.config.bugTracker().ifPresent(
       path -> contents.appendChild(MinXHTML.listItem(contentsBugTrackerLink())));
 
     area.appendChild(contents);
