@@ -92,8 +92,7 @@ public final class MinSite
   private static Element changelog(
     final MinChangesConfiguration changes_config)
   {
-    try (final InputStream input =
-           Files.newInputStream(changes_config.file())) {
+    try (InputStream input = Files.newInputStream(changes_config.file())) {
 
       final CChangelog changelog =
         CChangelogXMLReader.readFromStream(
@@ -134,7 +133,7 @@ public final class MinSite
 
     {
       final Builder b = new Builder();
-      try (final InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
+      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
         final Document doc = b.build(stream);
         features.appendChild(doc.getRootElement().copy());
       } catch (final IOException e) {
@@ -236,9 +235,9 @@ public final class MinSite
     final Element style = new Element("style", MinXHTML.XHTML);
     style.addAttribute(new Attribute("type", "text/css"));
 
-    try (final InputStream stream = MinSite.class.getResourceAsStream(
+    try (InputStream stream = MinSite.class.getResourceAsStream(
       "style.css")) {
-      try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
         final byte[] buffer = new byte[1024];
         while (true) {
           final int r = stream.read(buffer);
@@ -552,7 +551,7 @@ public final class MinSite
 
     this.config.overview().ifPresent(path -> {
       final Builder b = new Builder();
-      try (final InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
+      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
         final Document doc = b.build(stream);
         area.appendChild(doc.getRootElement().copy());
       } catch (final IOException e) {

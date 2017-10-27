@@ -79,7 +79,7 @@ public final class MinXHTMLReindent
     IllegalAccessException,
     ClassNotFoundException
   {
-    try (final InputStream input = Files.newInputStream(path_input)) {
+    try (InputStream input = Files.newInputStream(path_input)) {
       final InputSource src =
         new InputSource(input);
 
@@ -115,8 +115,8 @@ public final class MinXHTMLReindent
         "xml-declaration",
         Boolean.FALSE);
 
-      try (final OutputStream output = Files.newOutputStream(path_tmp)) {
-        try (final BufferedWriter buffered =
+      try (OutputStream output = Files.newOutputStream(path_tmp)) {
+        try (BufferedWriter buffered =
                new BufferedWriter(new OutputStreamWriter(output, UTF_8))) {
           buffered.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
           buffered.append(System.lineSeparator());
