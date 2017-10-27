@@ -33,7 +33,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.minisite.core</artifactId>
-      <version>0.0.1</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
