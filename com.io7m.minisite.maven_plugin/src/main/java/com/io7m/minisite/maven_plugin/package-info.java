@@ -18,5 +18,5 @@
  * Maven plugin.
  */
 
-@com.io7m.jnull.NonNullByDefault package com.io7m.minisite.maven_plugin;
+package com.io7m.minisite.maven_plugin;
 

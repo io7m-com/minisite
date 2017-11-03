@@ -37,11 +37,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.io7m.jnull</groupId>
-      <artifactId>com.io7m.jnull.core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
       <scope>provided</scope>

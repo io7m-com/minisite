@@ -19,7 +19,6 @@ package com.io7m.minisite.core;
 import com.io7m.changelog.core.CChangelog;
 import com.io7m.changelog.xom.CChangelogXHTMLWriter;
 import com.io7m.changelog.xom.CChangelogXMLReader;
-import com.io7m.jnull.NullCheck;
 import nu.xom.Attribute;
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -53,7 +52,7 @@ public final class MinSite
   private MinSite(
     final MinConfiguration in_config)
   {
-    this.config = NullCheck.notNull(in_config, "Configuration");
+    this.config = Objects.requireNonNull(in_config, "Configuration");
   }
 
   /**
@@ -67,7 +66,7 @@ public final class MinSite
   public static MinSite create(
     final MinConfiguration config)
   {
-    NullCheck.notNull(config, "Configuration");
+    Objects.requireNonNull(config, "Configuration");
     return new MinSite(config);
   }
 

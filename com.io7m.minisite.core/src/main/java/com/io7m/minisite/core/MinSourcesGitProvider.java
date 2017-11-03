@@ -16,7 +16,7 @@
 
 package com.io7m.minisite.core;
 
-import com.io7m.jnull.NullCheck;
+import java.util.Objects;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -45,7 +45,7 @@ public final class MinSourcesGitProvider implements MinSourcesProviderType
   public Element evaluate(
     final MinSourcesConfiguration configuration)
   {
-    NullCheck.notNull(configuration, "Configuration");
+    Objects.requireNonNull(configuration, "Configuration");
 
     final Element documentation = new Element("div", MinXHTML.XHTML);
     documentation.addAttribute(new Attribute("id", "Sources"));

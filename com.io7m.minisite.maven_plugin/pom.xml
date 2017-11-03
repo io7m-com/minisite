@@ -33,10 +33,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.io7m.jnull</groupId>
-      <artifactId>com.io7m.jnull.core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.io7m.xom</groupId>
       <artifactId>xom</artifactId>
     </dependency>
