@@ -137,6 +137,17 @@ public final class MinSiteMojo extends AbstractMojo
   private String changelogFeedEmail;
 
   /**
+   * The resources directory.
+   */
+
+  @Parameter(
+    name = "resourceDirectory",
+    property = "minisite.resourceDirectory",
+    defaultValue = "${project.basedir}/src/site/resources",
+    required = false)
+  private String resourceDirectory;
+
+  /**
    * The output directory.
    */
 
@@ -237,6 +248,17 @@ public final class MinSiteMojo extends AbstractMojo
         throw new UncheckedIOException(new IOException(e));
       }
     });
+
+    if (this.resourceDirectory != null) {
+      log.debug("copying resources");
+      try {
+        Files.walkFileTree(
+          Paths.get(this.resourceDirectory),
+          new CopyTreeVisitor(Paths.get(this.outputDirectory)));
+      } catch (final IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
   }
 
   private Vector<String> modules()
