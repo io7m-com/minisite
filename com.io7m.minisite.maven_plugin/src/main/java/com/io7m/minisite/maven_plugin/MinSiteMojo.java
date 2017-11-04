@@ -269,8 +269,6 @@ public final class MinSiteMojo extends AbstractMojo
   private Optional<MinChangesConfiguration> changelog()
   {
     if (this.changelogFile != null) {
-
-
       return Optional.of(
         MinChangesConfiguration.builder()
           .setFeedEmail(this.changelogFeedEmail)
