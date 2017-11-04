@@ -19,10 +19,4 @@
   <description>Tiny site generator for Maven projects (Checkstyle policy)</description>
   <url>http://io7m.github.io/minisite/</url>
 
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-  </scm>
-
 </project>
