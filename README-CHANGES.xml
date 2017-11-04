@@ -3,10 +3,10 @@
   <c:project>minisite</c:project>
 
   <c:release c:ticket-system="com.github.io7m.minisite">
-    <c:date>2017-10-15</c:date>
+    <c:date>2017-11-04</c:date>
     <c:version>0.0.1</c:version>
     <c:item>
-      <c:date>2017-10-15</c:date>
+      <c:date>2017-11-04</c:date>
       <c:type-code-new/>
       <c:summary>Initial release.</c:summary>
     </c:item>
