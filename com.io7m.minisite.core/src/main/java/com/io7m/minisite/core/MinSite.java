@@ -428,7 +428,7 @@ public final class MinSite
         .append("  <version>")
         .toString());
 
-    pre.appendChild(MinXHTML.link(link_version, module));
+    pre.appendChild(MinXHTML.link(link_version, version));
 
     pre.appendChild(
       new StringBuilder(64)
