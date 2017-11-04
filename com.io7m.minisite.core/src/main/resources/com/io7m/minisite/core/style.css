@@ -1,0 +1,43 @@
+body {
+  margin: 2em;
+  padding: 0px;
+  font-family: sans-serif;
+}
+
+div#main {
+  max-width: 50em;
+}
+
+p {
+  text-align: justify;
+}
+
+.changelog {
+  font-family: monospace;
+}
+.changelog td {
+  vertical-align: text-top;
+  padding-right: 2em;
+}
+.changelog td:nth-child(1) {
+  width: 10em;
+}
+
+.overview_content_area {
+
+}
+
+.overview_title_area {
+
+}
+
+.overview_title_area::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.icon {
+  float: left;
+  margin-right: 1em;
+}

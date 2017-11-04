@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.io7m.minisite</groupId>
+    <artifactId>com.io7m.minisite</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
+  <artifactId>com.io7m.minisite.checkstyle</artifactId>
+  <packaging>jar</packaging>
+
+  <name>com.io7m.minisite.checkstyle</name>
+  <description>Tiny site generator for Maven projects (Checkstyle policy)</description>
+  <url>http://io7m.github.io/minisite/</url>
+
+  <scm>
+    <url>${project.parent.scm.url}</url>
+    <connection>${project.parent.scm.connection}</connection>
+    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
+  </scm>
+
+</project>
