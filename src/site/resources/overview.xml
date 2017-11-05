@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <p>
+    <a href="https://travis-ci.org/io7m/minisite">
+      <img src="https://img.shields.io/travis/io7m/minisite.svg?style=flat-square" alt="Build status"/>
+    </a>
+    <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">
+      <img src="https://img.shields.io/maven-central/v/com.io7m.minisite/com.io7m.minisite.svg?style=flat-square" alt="Maven Central"/>
+    </a>
+    <a href="https://www.codacy.com/app/github_79/minisite">
+      <img src="https://img.shields.io/codacy/grade/69399f7fc5124416a474e7f0635318b9.svg?style=flat-square" alt="Codacy"/>
+    </a>
+    <a href="https://codecov.io/gh/io7m/minisite">
+      <img src="https://img.shields.io/codecov/c/github/io7m/minisite.svg?style=flat-square" alt="Codecov"/>
+    </a>
+  </p>
+
+  <p>
+    The <tt>minisite</tt> package implements a trivial replacement
+    for the Maven site plugin.
+  </p>
+
+</div>
