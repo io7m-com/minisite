@@ -7,6 +7,8 @@ install: true
 
 script:
   - mvn --errors clean verify
+  - bash <(curl -s https://codecov.io/bash) -f com.io7m.minisite.tests/target/site/jacoco-aggregate/jacoco.xml
 
 notifications:
   irc: "chat.freenode.net#io7m"
+

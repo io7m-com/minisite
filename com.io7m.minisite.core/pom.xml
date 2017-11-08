@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
   </parent>
 
   <artifactId>com.io7m.minisite.core</artifactId>
@@ -18,12 +18,6 @@
   <name>com.io7m.minisite.core</name>
   <description>Tiny site generator for Maven projects (Core)</description>
   <url>http://io7m.github.io/minisite/</url>
-
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-  </scm>
 
   <dependencies>
     <dependency>

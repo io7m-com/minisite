@@ -317,6 +317,7 @@ public final class MinSite
     final Element main = new Element("div", MinXHTML.XHTML);
     main.addAttribute(new Attribute("id", "main"));
     main.appendChild(this.overview());
+    main.appendChild(this.contents());
 
     this.config.features().ifPresent(
       path -> main.appendChild(features(path)));
@@ -559,6 +560,14 @@ public final class MinSite
         throw new UncheckedIOException(new IOException(e));
       }
     });
+
+    return area;
+  }
+
+  private Element contents()
+  {
+    final Element area = new Element("div", MinXHTML.XHTML);
+    area.appendChild(MinXHTML.h2("Contents"));
 
     final Element contents = new Element("ul", MinXHTML.XHTML);
 
