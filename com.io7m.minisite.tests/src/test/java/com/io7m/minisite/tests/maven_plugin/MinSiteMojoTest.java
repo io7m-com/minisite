@@ -51,6 +51,15 @@ public final class MinSiteMojoTest
   }
 
   @Test
+  public void testOptionalFilesEmptyChanges()
+    throws Exception
+  {
+    final File basedir = this.resources.getBasedir("optional_files_empty_changes");
+    this.maven.executeMojo(basedir, "generateSite");
+    assertFilesPresent(basedir, "target/minisite/index.xhtml");
+  }
+
+  @Test
   public void testOptionalFilesMissingFeatures()
     throws Exception
   {

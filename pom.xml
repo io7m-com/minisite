@@ -31,6 +31,8 @@
     <io7m.checkstyle.path>/com/io7m/minisite/checkstyle/checkstyle.xml</io7m.checkstyle.path>
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
 
+    <com.io7m.changelog.version>4.0.0-beta0004</com.io7m.changelog.version>
+
     <!-- Temporarily work around a lack of JDK 9 compatibility -->
     <mdep.analyze.skip>true</mdep.analyze.skip>
   </properties>
@@ -99,12 +101,17 @@
       <dependency>
         <groupId>com.io7m.changelog</groupId>
         <artifactId>com.io7m.changelog.core</artifactId>
-        <version>4.0.0-beta0001</version>
+        <version>${com.io7m.changelog.version}</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
-        <artifactId>com.io7m.changelog.xom</artifactId>
-        <version>4.0.0-beta0001</version>
+        <artifactId>com.io7m.changelog.xml.api</artifactId>
+        <version>${com.io7m.changelog.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.changelog</groupId>
+        <artifactId>com.io7m.changelog.xml.vanilla</artifactId>
+        <version>${com.io7m.changelog.version}</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.xom</groupId>

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <c:changelog xmlns:c="urn:com.io7m.changelog:4.0" project="minisite">
   <c:releases>
-    <c:release date="2000-01-01T00:00:00+00:00" ticket-system="com.github.io7m.minisite" version="1.0.0">
-      <c:changes>
-        <c:change date="2000-01-01T00:00:00+00:00" summary="Initial release."/>
-      </c:changes>
-    </c:release>
   </c:releases>
   <c:ticket-systems>
     <c:ticket-system default="true" id="com.github.io7m.minisite" url="https://github.com/io7m/minisite/issues/"/>

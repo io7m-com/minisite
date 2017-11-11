@@ -17,28 +17,32 @@
 package com.io7m.minisite.core;
 
 import com.io7m.changelog.core.CChangelog;
-import com.io7m.changelog.xom.CChangelogXHTMLWriter;
-import com.io7m.changelog.xom.CChangelogXMLReader;
+import com.io7m.changelog.parser.api.CParseErrorHandlers;
+import com.io7m.changelog.xml.api.CXHTMLChangelogWriterProviderType;
+import com.io7m.changelog.xml.api.CXHTMLChangelogWriterType;
+import com.io7m.changelog.xml.api.CXMLChangelogParserProviderType;
+import com.io7m.changelog.xml.api.CXMLChangelogParserType;
 import nu.xom.Attribute;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.ParsingException;
-import org.xml.sax.SAXException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
@@ -47,6 +51,9 @@ import java.util.ServiceLoader;
 
 public final class MinSite
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(MinSite.class);
+
   private final MinConfiguration config;
 
   private MinSite(
@@ -91,12 +98,33 @@ public final class MinSite
   private static Element changelog(
     final MinChangesConfiguration changes_config)
   {
-    try (InputStream input = Files.newInputStream(changes_config.file())) {
+    final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
+      ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
 
-      final CChangelog changelog =
-        CChangelogXMLReader.readFromStream(
+    if (!parser_provider_opt.isPresent()) {
+      throw new NoSuchElementException(
+        "No XML changelog parser providers are available");
+    }
+
+    final Optional<CXHTMLChangelogWriterProviderType> writer_provider_opt =
+      ServiceLoader.load(CXHTMLChangelogWriterProviderType.class).findFirst();
+
+    if (!writer_provider_opt.isPresent()) {
+      throw new NoSuchElementException(
+        "No XHTML changelog writer providers are available");
+    }
+
+    final CXMLChangelogParserProviderType parser_provider =
+      parser_provider_opt.get();
+
+    try (InputStream input = Files.newInputStream(changes_config.file())) {
+      final CXMLChangelogParserType parser =
+        parser_provider.create(
           changes_config.file().toUri(),
-          input);
+          input,
+          CParseErrorHandlers.loggingHandler(LOG));
+
+      final CChangelog changelog = parser.parse();
 
       final Element changes = new Element("div", MinXHTML.XHTML);
       changes.addAttribute(new Attribute("id", "changes"));
@@ -110,16 +138,37 @@ public final class MinSite
         changes.appendChild(p);
       }
 
-      changes.appendChild(CChangelogXHTMLWriter.writeElement(changelog).copy());
+      if (changelog.releases().isEmpty()) {
+        final Element p = new Element("p", MinXHTML.XHTML);
+        p.appendChild("No formal releases have been made.");
+        changes.appendChild(p);
+      } else {
+        changes.appendChild(
+          serializeChangelog(writer_provider_opt.get(), changelog).copy());
+      }
+
       return changes;
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
-    } catch (URISyntaxException
-      | ParseException
-      | ParsingException
-      | SAXException
-      | ParserConfigurationException e) {
+    } catch (final ParsingException e) {
       throw new UncheckedIOException(new IOException(e));
+    }
+  }
+
+  private static Element serializeChangelog(
+    final CXHTMLChangelogWriterProviderType writer_provider,
+    final CChangelog changelog)
+    throws IOException, ParsingException
+  {
+    try (ByteArrayOutputStream bao = new ByteArrayOutputStream()) {
+      final CXHTMLChangelogWriterType writer =
+        writer_provider.create(URI.create("urn:stdout"), bao);
+      writer.write(changelog);
+      final Builder b = new Builder(false);
+      try (ByteArrayInputStream bai = new ByteArrayInputStream(bao.toByteArray())) {
+        final Document doc = b.build(bai);
+        return doc.getRootElement();
+      }
     }
   }
 
