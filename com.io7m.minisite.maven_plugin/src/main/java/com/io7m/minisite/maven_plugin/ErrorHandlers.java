@@ -19,7 +19,6 @@ package com.io7m.minisite.maven_plugin;
 import com.io7m.changelog.parser.api.CParseError;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.apache.maven.plugin.logging.Log;
-import org.slf4j.Logger;
 
 import java.net.URI;
 import java.util.Objects;
