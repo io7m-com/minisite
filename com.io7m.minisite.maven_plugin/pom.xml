@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
   </parent>
 
   <artifactId>com.io7m.minisite.maven_plugin</artifactId>
@@ -36,7 +36,11 @@
     </dependency>
     <dependency>
       <groupId>com.io7m.changelog</groupId>
-      <artifactId>com.io7m.changelog.xom</artifactId>
+      <artifactId>com.io7m.changelog.xml.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.changelog</groupId>
+      <artifactId>com.io7m.changelog.xml.vanilla</artifactId>
     </dependency>
 
     <dependency>

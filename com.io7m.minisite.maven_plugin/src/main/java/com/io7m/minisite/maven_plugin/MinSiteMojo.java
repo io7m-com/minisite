@@ -17,9 +17,11 @@
 package com.io7m.minisite.maven_plugin;
 
 import com.io7m.changelog.core.CChangelog;
-import com.io7m.changelog.xom.CAtomFeedMeta;
-import com.io7m.changelog.xom.CChangelogAtomWriter;
-import com.io7m.changelog.xom.CChangelogXMLReader;
+import com.io7m.changelog.xml.api.CAtomChangelogWriterConfiguration;
+import com.io7m.changelog.xml.api.CAtomChangelogWriterProviderType;
+import com.io7m.changelog.xml.api.CAtomChangelogWriterType;
+import com.io7m.changelog.xml.api.CXMLChangelogParserProviderType;
+import com.io7m.changelog.xml.api.CXMLChangelogParserType;
 import com.io7m.minisite.core.MinBugTrackerConfiguration;
 import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
@@ -29,7 +31,6 @@ import com.io7m.minisite.core.MinXHTMLReindent;
 import io.vavr.collection.Vector;
 import nu.xom.DocType;
 import nu.xom.Document;
-import nu.xom.ParsingException;
 import nu.xom.Serializer;
 import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.License;
@@ -53,13 +54,15 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 // CHECKSTYLE:OFF
 
@@ -216,36 +219,58 @@ public final class MinSiteMojo extends AbstractMojo
     }
 
     config.changelog().ifPresent(changes_config -> {
+      final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
+        ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
+
+      if (!parser_provider_opt.isPresent()) {
+        throw new NoSuchElementException(
+          "No XML changelog parser providers are available");
+      }
+
+      final Optional<CAtomChangelogWriterProviderType> writer_provider_opt =
+        ServiceLoader.load(CAtomChangelogWriterProviderType.class).findFirst();
+
+      if (!writer_provider_opt.isPresent()) {
+        throw new NoSuchElementException(
+          "No Atom changelog writer providers are available");
+      }
+
+      final CXMLChangelogParserProviderType parser_provider =
+        parser_provider_opt.get();
+      final CAtomChangelogWriterProviderType writer_provider =
+        writer_provider_opt.get();
+
       try (final InputStream input =
              Files.newInputStream(changes_config.file())) {
-        final CChangelog changelog =
-          CChangelogXMLReader.readFromStream(
-            changes_config.file().toUri(), input);
 
-        final CAtomFeedMeta meta =
-          CAtomFeedMeta.builder()
+        final CXMLChangelogParserType parser =
+          parser_provider.create(
+            changes_config.file().toUri(),
+            input,
+            ErrorHandlers.loggingHandler(log));
+
+        final CChangelog changelog = parser.parse();
+
+        final CAtomChangelogWriterConfiguration meta =
+          CAtomChangelogWriterConfiguration.builder()
             .setAuthorEmail(changes_config.feedEmail())
             .setAuthorName("minisite")
+            .setUpdated(ZonedDateTime.now(ZoneId.of("UTC")))
             .setTitle(config.projectName() + " Releases")
             .setUri(URI.create(this.project.getUrl() + "/releases.atom"))
             .build();
 
         final Path releases = directory.resolve("releases.atom");
         try (final OutputStream output = Files.newOutputStream(releases)) {
-          final Serializer serial = new Serializer(output, "UTF-8");
-          serial.setIndent(2);
-          serial.setMaxLength(72);
-          serial.write(new Document(CChangelogAtomWriter.writeElement(meta, changelog)));
-          serial.flush();
+          final CAtomChangelogWriterType writer =
+            writer_provider.createWithConfiguration(
+              meta,
+              changes_config.file().toUri(),
+              output);
+          writer.write(changelog);
         }
       } catch (final IOException e) {
         throw new UncheckedIOException(e);
-      } catch (URISyntaxException
-        | ParseException
-        | ParsingException
-        | SAXException
-        | ParserConfigurationException e) {
-        throw new UncheckedIOException(new IOException(e));
       }
     });
 
