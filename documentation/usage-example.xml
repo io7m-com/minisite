@@ -1,0 +1,45 @@
+<build>
+  <plugins>
+
+    <!-- Disable the existing maven-site-plugin -->
+    <plugin>
+      <artifactId>maven-site-plugin</artifactId>
+      <version>3.6</version>
+      <executions>
+        <execution>
+          <id>default-site</id>
+          <phase>none</phase>
+          <goals>
+            <goal>site</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+    <plugin>
+      <groupId>com.io7m.minisite</groupId>
+      <artifactId>com.io7m.minisite.maven_plugin</artifactId>
+      <version>0.0.3</version>
+      <executions>
+        <execution>
+          <id>minisite</id>
+          <phase>site</phase>
+          <goals>
+            <goal>generateSite</goal>
+          </goals>
+          <configuration>
+            <overviewFile>src/site/resources/overview.xml</overviewFile>
+            <featuresFile>src/site/resources/features.xml</featuresFile>
+            <changelogFile>README-CHANGES.xml</changelogFile>
+            <changelogFeedEmail>contact@io7m.com</changelogFeedEmail>
+            <outputDirectory>/home/someone/git/com.github/io7m/minisite/com.io7m.minisite.documentation/target/minisite</outputDirectory>
+            <resourcesDirectory>${project.base.directory}/src/site/resources</resourcesDirectory>
+          </configuration>
+        </execution>
+      </executions>
+      <inherited>false</inherited>
+    </plugin>
+
+  </plugins>
+</build>
+

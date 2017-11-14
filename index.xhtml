@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta content="https://www.github.com/io7m/minisite; 0.0.5" name="generator"/>
+        <meta content="application/xhtml+xml; charset=UTF-8" http-equiv="Content-Type"/>
+        <style type="text/css">body {
+  margin: 2em;
+  padding: 0px;
+  font-family: sans-serif;
+}
+
+div#main {
+  max-width: 50em;
+}
+
+p {
+  text-align: justify;
+}
+
+.changelog {
+  font-family: monospace;
+}
+.changelog td {
+  vertical-align: text-top;
+  padding-right: 2em;
+}
+.changelog td:nth-child(1) {
+  width: 10em;
+}
+
+.overview_content_area {
+
+}
+
+.overview_title_area {
+
+}
+
+.overview_title_area::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.icon {
+  float: left;
+  margin-right: 1em;
+}
+</style>
+        <title>com.io7m.minisite</title>
+    </head>
+    <body>
+        <div id="main">
+            <div id="overview">
+                <div class="overview_title_area">
+                    <img alt="Project icon" class="icon" height="64"
+                        src="icon.png" width="64"/>
+                    <h1>com.io7m.minisite</h1>
+                </div>
+                <div class="overview_content_area">
+                    <div>
+                        <p>
+                            <a href="https://travis-ci.org/io7m/minisite">
+                                <img alt="Build status" src="https://img.shields.io/travis/io7m/minisite.png?style=flat-square"/>
+                            </a>
+                            <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">
+                                <img alt="Maven Central" src="https://img.shields.io/maven-central/v/com.io7m.minisite/com.io7m.minisite.png?style=flat-square"/>
+                            </a>
+                            <a href="https://www.codacy.com/app/github_79/minisite">
+                                <img alt="Codacy" src="https://img.shields.io/codacy/grade/69399f7fc5124416a474e7f0635318b9.png?style=flat-square"/>
+                            </a>
+                            <a href="https://codecov.io/gh/io7m/minisite">
+                                <img alt="Codecov" src="https://img.shields.io/codecov/c/github/io7m/minisite.png?style=flat-square"/>
+                            </a>
+                        </p>
+                        <p>
+    The <tt>minisite</tt> package implements a trivial replacement
+    for the Maven site plugin.
+  </p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2>Contents</h2>
+                <ul>
+                    <li>
+                        <a href="#features">Features</a>
+                    </li>
+                    <li>
+                        <a href="#releases">Releases</a>
+                    </li>
+                    <li>
+                        <a href="#documentation">Documentation</a>
+                    </li>
+                    <li>
+                        <a href="#maven">Maven</a>
+                    </li>
+                    <li>
+                        <a href="#changes">Changes</a>
+                    </li>
+                    <li>
+                        <a href="#sources">Sources</a>
+                    </li>
+                    <li>
+                        <a href="#license">License</a>
+                    </li>
+                    <li>
+                        <a href="#bug-tracker">Bug Tracker</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="features">
+                <h2>Features</h2>
+                <div>
+                    <ul>
+                        <li>Single-page, static, XHTML 1.0 Strict, Javascript-free sites</li>
+                        <li>Optional <a href="http://io7m.github.io/changelog/">com.io7m.changelog</a> integration</li>
+                        <li>
+                            <a href="https://www.osgi.org/">OSGi</a>-ready</li>
+                        <li>ISC license</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="releases">
+                <h2>Releases</h2>
+                <p>The current release is <tt>0.0.6-SNAPSHOT</tt>.</p>
+                <p>Source code and binaries are available from the <a href="https://repo1.maven.org/maven2/com/io7m/minisite">repository</a>.</p>
+            </div>
+            <div id="documentation">
+                <h2>Documentation</h2>
+                <p>Documentation for the <tt>0.0.6-SNAPSHOT</tt> release is available for reading online.</p>
+                <ul>
+                    <li>
+                        <a href="documentation/index-m.xhtml">XHTML - one page per section</a>
+                    </li>
+                    <li>
+                        <a href="documentation/index.xhtml">XHTML - single page</a>
+                    </li>
+                    <li>
+                        <a href="documentation/main.txt">UTF-8 plain text</a>
+                    </li>
+                </ul>
+
+                <p>Documentation for current and older releases is archived in the <a href="https://repo1.maven.org/maven2/com/io7m/minisite">repository</a>.</p>
+            </div>
+            <div id="maven">
+                <h2>Maven</h2>
+                <p>The following is a complete list of the project's modules expressed as Maven dependencies: </p>
+                <pre>&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a
+                        href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite.core%22">com.io7m.minisite.core</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a
+                        href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite.core%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite.tests%22">com.io7m.minisite.tests</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a
+                        href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite.tests%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite.checkstyle%22">com.io7m.minisite.checkstyle</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a
+                        href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite.checkstyle%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite.documentation%22">com.io7m.minisite.documentation</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a
+                        href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite.documentation%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.minisite%22">com.io7m.minisite</a>&lt;/groupId&gt;
+  &lt;artifactId&gt;<a
+                        href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.io7m.minisite.maven_plugin%22">com.io7m.minisite.maven_plugin</a>&lt;/artifactId&gt;
+  &lt;version&gt;<a href="http://search.maven.org/#artifactdetails%7Ccom.io7m.minisite%7Ccom.io7m.minisite.maven_plugin%7C0.0.6-SNAPSHOT%7Cjar">0.0.6-SNAPSHOT</a>&lt;/version&gt;
+&lt;/dependency&gt;
+
+</pre>
+                <p>Each release of the project is made available on <a href="http://search.maven.org">Maven Central</a> within ten minutes of the release announcement.</p>
+            </div>
+            <div id="changes">
+                <h2>Changes</h2>
+                <p>Subscribe to the releases <a href="releases.atom">atom feed</a>.</p>
+                <p>No formal releases have been made.</p>
+            </div>
+            <div id="Sources">
+                <h2>Sources</h2>
+                <p>This project uses <a href="http://www.git-scm.com">Git</a> to manage source code.</p>
+                <p>Repository: <a href="https://github.com/io7m/minisite">https://github.com/io7m/minisite</a>
+                </p>
+                <pre>$ git clone https://github.com/io7m/minisite</pre>
+            </div>
+            <div id="license">
+                <h2>License</h2>
+                <pre>Copyright ⓒ 2017 Mark Raynsford &lt;code@io7m.com&gt; http://io7m.com
+
+Permission to use, copy, modify, and/or distribute this software for
+any purpose with or without fee is hereby granted, provided that the
+above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR
+BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES
+OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+</pre>
+            </div>
+            <div id="bug-tracker">
+                <h2>Bug Tracker</h2>
+                <p>The project uses <a href="http://github.com/io7m/minisite/issues">GitHub Issues</a> to track issues.</p>
+            </div>
+        </div>
+    </body>
+</html>
