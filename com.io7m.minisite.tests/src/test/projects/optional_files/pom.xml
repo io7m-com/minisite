@@ -19,6 +19,7 @@
           <goal>generateSite</goal>
         </goals>
         <configuration>
+          <documentationFile>documentation.xhtml</documentationFile>
           <overviewFile>overview.xhtml</overviewFile>
           <featuresFile>features.xhtml</featuresFile>
           <changelogFile>changes.xml</changelogFile>

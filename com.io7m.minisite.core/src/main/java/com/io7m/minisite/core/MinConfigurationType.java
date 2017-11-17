@@ -82,11 +82,11 @@ public interface MinConfigurationType
   Optional<Path> features();
 
   /**
-   * @return The available documentation items
+   * @return An XHTML file containing the documentation links of the project
    */
 
   @Value.Parameter
-  Vector<MinDocumentationItem> documentation();
+  Optional<Path> documentation();
 
   /**
    * @return The changelog configuration, if any

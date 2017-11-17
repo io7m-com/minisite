@@ -30,32 +30,11 @@
           <configuration>
             <overviewFile>src/site/resources/overview.xml</overviewFile>
             <featuresFile>src/site/resources/features.xml</featuresFile>
+            <documentationFile>src/site/resources/documentation.xml</documentationFile>
             <changelogFile>README-CHANGES.xml</changelogFile>
             <changelogFeedEmail>contact@io7m.com</changelogFeedEmail>
             <outputDirectory>${project.build.directory}/minisite</outputDirectory>
             <resourcesDirectory>${project.base.directory}/src/site/resources</resourcesDirectory>
-
-            <documentation>
-              <items>
-                <documentationItem>
-                  <name>User documentation</name>
-                  <formats>
-                    <documentationFormat>
-                      <name>XHTML - one page per section</name>
-                      <path>/documentation/index-m.xhtml</path>
-                    </documentationFormat>
-                    <documentationFormat>
-                      <name>XHTML - single page</name>
-                      <path>/documentation/index.xhtml</path>
-                    </documentationFormat>
-                    <documentationFormat>
-                      <name>UTF-8 plain text</name>
-                      <path>/documentation/main.txt</path>
-                    </documentationFormat>
-                  </formats>
-                </documentationItem>
-              </items>
-            </documentation>
           </configuration>
         </execution>
       </executions>

@@ -110,7 +110,7 @@ public final class MinSiteMojoTest
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"releases\""));
     Assert.assertEquals(
-      "false", xpathOn(file, "//@id=\"documentation\""));
+      "true", xpathOn(file, "//@id=\"documentation\""));
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
@@ -305,31 +305,5 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
-  }
-
-  @Test
-  public void testDocumentation()
-    throws Exception
-  {
-    final File basedir = this.resources.getBasedir("documentation");
-    this.maven.executeMojo(basedir, "generateSite");
-    assertFilesPresent(basedir, "target/minisite/index.xhtml");
-
-    final Path file =
-      basedir.toPath().resolve("target/minisite/index.xhtml");
-    Assert.assertEquals(
-      "false", xpathOn(file, "//@id=\"features\""));
-    Assert.assertEquals(
-      "false", xpathOn(file, "//@id=\"changes\""));
-    Assert.assertEquals(
-      "true", xpathOn(file, "//@id=\"overview\""));
-    Assert.assertEquals(
-      "true", xpathOn(file, "//@id=\"releases\""));
-    Assert.assertEquals(
-      "true", xpathOn(file, "//@id=\"documentation\""));
-    Assert.assertEquals(
-      "true", xpathOn(file, "//@id=\"maven\""));
-    Assert.assertEquals(
-      "true", xpathOn(file, "//@id=\"license\""));
   }
 }

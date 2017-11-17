@@ -25,8 +25,6 @@ import com.io7m.changelog.xml.api.CXMLChangelogParserType;
 import com.io7m.minisite.core.MinBugTrackerConfiguration;
 import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
-import com.io7m.minisite.core.MinDocumentationFormat;
-import com.io7m.minisite.core.MinDocumentationItem;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
 import com.io7m.minisite.core.MinXHTMLReindent;
@@ -131,9 +129,10 @@ public final class MinSiteMojo extends AbstractMojo
    */
 
   @Parameter(
-    name = "documentation",
-    required = true)
-  private Documentation documentation = new Documentation();
+    name = "documentationFile",
+    property = "minisite.documentationFile",
+    required = false)
+  private String documentationFile;
 
   /**
    * The changelog file.
@@ -304,19 +303,13 @@ public final class MinSiteMojo extends AbstractMojo
     }
   }
 
-  private Vector<MinDocumentationItem> documentation()
+  private Optional<Path> documentation()
   {
-    Vector<MinDocumentationItem> r = Vector.empty();
-    for (final DocumentationItem item : this.documentation.getItems()) {
-      Vector<MinDocumentationFormat> formats = Vector.empty();
-      for (final DocumentationFormat format : item.getFormats()) {
-        formats = formats.append(
-          MinDocumentationFormat.of(
-            format.getName(), Paths.get(format.getPath())));
-      }
-      r = r.append(MinDocumentationItem.of(item.getName(), formats));
+    if (this.documentationFile != null) {
+      return Optional.of(
+        this.project.getBasedir().toPath().resolve(this.documentationFile));
     }
-    return r;
+    return Optional.empty();
   }
 
   private Vector<String> modules()
