@@ -3,9 +3,7 @@
 [subsection [title Design] [id usage.maven.design]]
 [paragraph]
 The plugin is designed to produce an extremely simple, static, single-page,
-XHTML 1.0 Strict site with no Javascript. It assumes that documentation will
-be placed in a [term [type parameter] "documentation"] subdirectory of the
-generated site. The plugin assumes the existence of a
+XHTML 1.0 Strict site with no Javascript. The plugin assumes the existence of a
 [term [type constant] "64x64"] PNG file at [term [type parameter] "/icon.png"].
 
 [subsection [title Example] [id usage.maven.example]]
@@ -55,3 +53,14 @@ optional and defaults to [term [type parameter] "{project.build.directory}/minis
 The [term [type parameter] "resourcesDirectory"] parameter specifies the directory
 from which site resources will be copied copied. This parameter is
 optional and defaults to [term [type parameter] "{project.base.directory}/src/site/resources"].
+
+[paragraph]
+The [term [type parameter] "documentation"] parameter specifies documentation.
+It takes a list of [term [type expression] "DocumentationItem"] values as
+parameters. Each [term [type expression] "DocumentationItem"] specifies a
+name and a list of [term [type expression] "DocumentationFormat"] values. Each
+[term [type expression] "DocumentationFormat"] value specifies a format name
+and a path. The usage example above specifies a single documentation item that
+has three formats: Single-page XHTML placed at [term [type file] "/documentation/index.xhtml"],
+multi-page XHTML placed at [term [type file] "/documentation/index-m.xhtml"],
+and plain text placed at [term [type file] "/documentation/main.txt"].

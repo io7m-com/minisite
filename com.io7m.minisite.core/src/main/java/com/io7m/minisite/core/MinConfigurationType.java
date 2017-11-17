@@ -82,6 +82,13 @@ public interface MinConfigurationType
   Optional<Path> features();
 
   /**
+   * @return The available documentation items
+   */
+
+  @Value.Parameter
+  Vector<MinDocumentationItem> documentation();
+
+  /**
    * @return The changelog configuration, if any
    */
 

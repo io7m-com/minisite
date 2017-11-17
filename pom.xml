@@ -6,12 +6,12 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor</artifactId>
-    <version>2.0.0-beta0008</version>
+    <version>2.0.0-beta0009</version>
   </parent>
 
   <groupId>com.io7m.minisite</groupId>
   <artifactId>com.io7m.minisite</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <packaging>pom</packaging>
 
   <name>com.io7m.minisite</name>
@@ -30,10 +30,8 @@
     <io7m.checkstyle.artifact>com.io7m.minisite.checkstyle</io7m.checkstyle.artifact>
     <io7m.checkstyle.path>/com/io7m/minisite/checkstyle/checkstyle.xml</io7m.checkstyle.path>
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
+    <com.io7m.changelog.version>4.0.0-beta0006</com.io7m.changelog.version>
 
-    <com.io7m.changelog.version>4.0.0-beta0005</com.io7m.changelog.version>
-
-    <!-- Temporarily work around a lack of JDK 9 compatibility -->
     <mdep.analyze.skip>true</mdep.analyze.skip>
   </properties>
 
@@ -96,7 +94,7 @@
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>2.0.0-beta0002</version>
+        <version>2.0.0-beta0003</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
