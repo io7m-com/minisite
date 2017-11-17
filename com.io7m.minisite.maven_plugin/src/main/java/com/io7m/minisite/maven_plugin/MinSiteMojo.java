@@ -25,6 +25,8 @@ import com.io7m.changelog.xml.api.CXMLChangelogParserType;
 import com.io7m.minisite.core.MinBugTrackerConfiguration;
 import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
+import com.io7m.minisite.core.MinDocumentationFormat;
+import com.io7m.minisite.core.MinDocumentationItem;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
 import com.io7m.minisite.core.MinXHTMLReindent;
@@ -88,14 +90,20 @@ public final class MinSiteMojo extends AbstractMojo
    * Parameter to allow skipping of the generation.
    */
 
-  @Parameter(name = "skip", property = "minisite.skip", required = false)
+  @Parameter(
+    name = "skip",
+    property = "minisite.skip",
+    required = false)
   private boolean skip;
 
   /**
    * Access to the Maven project.
    */
 
-  @Parameter(defaultValue = "${project}", required = true, readonly = true)
+  @Parameter(
+    defaultValue = "${project}",
+    required = true,
+    readonly = true)
   private MavenProject project;
 
   /**
@@ -117,6 +125,15 @@ public final class MinSiteMojo extends AbstractMojo
     property = "minisite.featuresFile",
     required = false)
   private String featuresFile;
+
+  /**
+   * The documentation configuration.
+   */
+
+  @Parameter(
+    name = "documentation",
+    required = true)
+  private Documentation documentation = new Documentation();
 
   /**
    * The changelog file.
@@ -177,6 +194,7 @@ public final class MinSiteMojo extends AbstractMojo
         .setProjectName(this.project.getName())
         .setProjectGroupName(this.project.getGroupId())
         .setProjectModules(this.modules())
+        .setDocumentation(this.documentation())
         .setRelease(this.project.getVersion())
         .setSources(this.sources())
         .setLicense(this.license())
@@ -284,6 +302,21 @@ public final class MinSiteMojo extends AbstractMojo
         throw new UncheckedIOException(e);
       }
     }
+  }
+
+  private Vector<MinDocumentationItem> documentation()
+  {
+    Vector<MinDocumentationItem> r = Vector.empty();
+    for (final DocumentationItem item : this.documentation.getItems()) {
+      Vector<MinDocumentationFormat> formats = Vector.empty();
+      for (final DocumentationFormat format : item.getFormats()) {
+        formats = formats.append(
+          MinDocumentationFormat.of(
+            format.getName(), Paths.get(format.getPath())));
+      }
+      r = r.append(MinDocumentationItem.of(item.getName(), formats));
+    }
+    return r;
   }
 
   private Vector<String> modules()
