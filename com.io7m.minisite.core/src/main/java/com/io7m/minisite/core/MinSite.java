@@ -373,9 +373,8 @@ public final class MinSite
 
     main.appendChild(this.releases());
 
-    if (!this.config.documentation().isEmpty()) {
-      main.appendChild(this.documentation());
-    }
+    this.config.documentation().ifPresent(
+      path -> main.appendChild(this.documentation(path)));
 
     main.appendChild(this.maven());
 
@@ -494,7 +493,8 @@ public final class MinSite
         .toString());
   }
 
-  private Element documentation()
+  private Element documentation(
+    final Path path)
   {
     final Element documentation = new Element("div", MinXHTML.XHTML);
     documentation.addAttribute(new Attribute("id", "documentation"));
@@ -519,17 +519,17 @@ public final class MinSite
       documentation.appendChild(p);
     }
 
-    this.config.documentation().forEach(item -> {
-      final Element h3 = new Element("h3", MinXHTML.XHTML);
-      h3.appendChild(item.name());
-      documentation.appendChild(h3);
-      final Element ul = new Element("ul", MinXHTML.XHTML);
-      item.formats().forEach(format -> {
-        ul.appendChild(MinXHTML.listItem(
-          MinXHTML.link(format.path().toString(), format.name())));
-      });
-      documentation.appendChild(ul);
-    });
+    {
+      final Builder b = new Builder();
+      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
+        final Document doc = b.build(stream);
+        documentation.appendChild(doc.getRootElement().copy());
+      } catch (final IOException e) {
+        throw new UncheckedIOException(e);
+      } catch (final ParsingException e) {
+        throw new UncheckedIOException(new IOException(e));
+      }
+    }
 
     return documentation;
   }
@@ -628,11 +628,8 @@ public final class MinSite
     this.config.features().ifPresent(
       path -> contents.appendChild(MinXHTML.listItem(contentsFeaturesLink())));
     contents.appendChild(MinXHTML.listItem(contentsReleasesLink()));
-
-    if (!this.config.documentation().isEmpty()) {
-      contents.appendChild(MinXHTML.listItem(contentsDocumentationLink()));
-    }
-
+    this.config.documentation().ifPresent(
+      path -> contents.appendChild(MinXHTML.listItem(contentsDocumentationLink())));
     contents.appendChild(MinXHTML.listItem(contentsMavenLink()));
     this.config.changelog().ifPresent(
       path -> contents.appendChild(MinXHTML.listItem(contentsChangesLink())));
