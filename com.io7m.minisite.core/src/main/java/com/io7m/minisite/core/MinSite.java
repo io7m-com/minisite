@@ -374,7 +374,7 @@ public final class MinSite
     main.appendChild(this.releases());
 
     this.config.documentation().ifPresent(
-      path -> main.appendChild(documentation(path)));
+      path -> main.appendChild(this.documentation(path)));
 
     main.appendChild(this.maven());
 
@@ -493,12 +493,31 @@ public final class MinSite
         .toString());
   }
 
-  private static Element documentation(
+  private Element documentation(
     final Path path)
   {
     final Element documentation = new Element("div", MinXHTML.XHTML);
     documentation.addAttribute(new Attribute("id", "documentation"));
     documentation.appendChild(MinXHTML.h2("Documentation"));
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild("Documentation for the ");
+      final Element tt = new Element("tt", MinXHTML.XHTML);
+      tt.appendChild(this.config.release());
+      p.appendChild(tt);
+      p.appendChild(" release is available for reading online.");
+      documentation.appendChild(p);
+    }
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild(
+        "Documentation for current and older releases is archived in the ");
+      p.appendChild(MinXHTML.link(this.centralRepos(), "repository"));
+      p.appendChild(".");
+      documentation.appendChild(p);
+    }
 
     {
       final Builder b = new Builder();
