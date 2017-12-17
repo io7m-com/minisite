@@ -1,4 +1,4 @@
-com.io7m.minisite 0.0.6-SNAPSHOT Documentation
+com.io7m.minisite 0.0.9 Documentation
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Contents
@@ -95,10 +95,8 @@ com.io7m.minisite 0.0.6-SNAPSHOT Documentation
 2.1.1 Design [id: usage.maven.design]
 
 1     The plugin is designed to produce an extremely simple, static,
-      single-page, XHTML 1.0 Strict site with no Javascript. It assumes that
-      documentation will be placed in a documentation subdirectory of the
-      generated site. The plugin assumes the existence of a 64x64 PNG file at
-      /icon.png.
+      single-page, XHTML 1.0 Strict site with no Javascript. The plugin assumes
+      the existence of a 64x64 PNG file at /icon.png.
 
 2.1.2 Example [id: usage.maven.example]
 
@@ -128,7 +126,7 @@ com.io7m.minisite 0.0.6-SNAPSHOT Documentation
           <plugin>
             <groupId>com.io7m.minisite</groupId>
             <artifactId>com.io7m.minisite.maven_plugin</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.6</version>
             <executions>
               <execution>
                 <id>minisite</id>
@@ -139,6 +137,7 @@ com.io7m.minisite 0.0.6-SNAPSHOT Documentation
                 <configuration>
                   <overviewFile>src/site/resources/overview.xml</overviewFile>
                   <featuresFile>src/site/resources/features.xml</featuresFile>
+                  <documentationFile>src/site/resources/documentation.xml</documentationFile>
                   <changelogFile>README-CHANGES.xml</changelogFile>
                   <changelogFeedEmail>contact@io7m.com</changelogFeedEmail>
                   <outputDirectory>/home/someone/git/com.github/io7m/minisite/com.io7m.minisite.documentation/target/minisite</outputDirectory>
@@ -186,6 +185,15 @@ com.io7m.minisite 0.0.6-SNAPSHOT Documentation
 9     The resourcesDirectory parameter specifies the directory from which site
       resources will be copied copied. This parameter is optional and defaults
       to {project.base.directory}/src/site/resources.
+
+10    The documentation parameter specifies documentation. It takes a list of
+      DocumentationItem values as parameters. Each DocumentationItem specifies
+      a name and a list of DocumentationFormat values. Each DocumentationFormat
+      value specifies a format name and a path. The usage example above
+      specifies a single documentation item that has three formats: Single-page
+      XHTML placed at /documentation/index.xhtml, multi-page XHTML placed at
+      /documentation/index-m.xhtml, and plain text placed at
+      /documentation/main.txt.
 
 
 Footnotes

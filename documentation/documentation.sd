@@ -1,4 +1,4 @@
-[document [title com.io7m.minisite 0.0.6-SNAPSHOT Documentation]
+[document [title com.io7m.minisite 0.0.9 Documentation]
   [import "pkg.sdi"]
   [import "usage.sdi"]]
 
