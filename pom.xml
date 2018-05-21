@@ -26,7 +26,7 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
+    <io7m.api.previousVersion>0.0.9</io7m.api.previousVersion>
     <com.io7m.changelog.version>4.0.0-beta0009</com.io7m.changelog.version>
     <io7m.org.immutables.version>2.6.0</io7m.org.immutables.version>
     <io7m.maven-api.version>3.5.3</io7m.maven-api.version>
