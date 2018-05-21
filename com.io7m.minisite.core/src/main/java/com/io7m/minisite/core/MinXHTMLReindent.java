@@ -21,13 +21,10 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -57,27 +54,14 @@ public final class MinXHTMLReindent
    * @param path_tmp    The temporary output file
    * @param path_output The final output file
    *
-   * @throws TransformerException         On XML or I/O errors
-   * @throws IOException                  On XML or I/O errors
-   * @throws ParserConfigurationException On XML or I/O errors
-   * @throws SAXException                 On XML or I/O errors
-   * @throws InstantiationException       On XML or I/O errors
-   * @throws IllegalAccessException       On XML or I/O errors
-   * @throws ClassNotFoundException       On XML or I/O errors
+   * @throws Exception On XML or I/O errors
    */
 
   public static void indent(
     final Path path_input,
     final Path path_tmp,
     final Path path_output)
-    throws
-    TransformerException,
-    IOException,
-    ParserConfigurationException,
-    SAXException,
-    InstantiationException,
-    IllegalAccessException,
-    ClassNotFoundException
+    throws Exception
   {
     try (InputStream input = Files.newInputStream(path_input)) {
       final InputSource src =
@@ -96,6 +80,7 @@ public final class MinXHTMLReindent
       dbf.setFeature(
         "http://apache.org/xml/features/nonvalidating/load-external-dtd",
         false);
+      dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
       final Element document =
         dbf.newDocumentBuilder()
@@ -119,10 +104,13 @@ public final class MinXHTMLReindent
         try (BufferedWriter buffered =
                new BufferedWriter(new OutputStreamWriter(output, UTF_8))) {
           buffered.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-          buffered.append(System.lineSeparator());
+          final String separator = System.lineSeparator();
+          buffered.append(separator);
           buffered.append(
-            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
-          buffered.append(System.lineSeparator());
+            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
+          buffered.append(
+            "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+          buffered.append(separator);
           buffered.flush();
 
           output.write(writer.writeToString(document).getBytes(UTF_8));

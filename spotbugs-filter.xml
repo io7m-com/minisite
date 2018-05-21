@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+  <Match>
+    <Class name="~com\.io7m\.minisite\..+\$InitShim"/>
+    <Or>
+      <Bug pattern="PME_POOR_MANS_ENUM"/>
+      <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+      <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Class name="~com\.io7m\.minisite\..+\$Builder"/>
+    <Or>
+      <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+      <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
+      <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Or>
+      <Class name="com.io7m.minisite.core.MinConfiguration"/>
+      <Class name="com.io7m.minisite.core.MinChangesConfiguration"/>
+      <Class name="com.io7m.minisite.core.MinBugTrackerConfiguration"/>
+      <Class name="com.io7m.minisite.core.MinSourcesConfiguration"/>
+    </Or>
+  </Match>
+
+  <!-- It looks like hand-built XML but it actually isn't -->
+  <Match>
+    <Class name="com.io7m.minisite.core.MinSite"/>
+    <Method name="mavenDependency"/>
+    <Bug pattern="CBX_CUSTOM_BUILT_XML"/>
+  </Match>
+
+  <!-- False positive -->
+  <Match>
+    <Class name="com.io7m.minisite.core.MinSite"/>
+    <Method name="css"/>
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+  </Match>
+
+  <Match>
+    <Method name="checkPreconditions"/>
+    <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
+      <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
+      <Bug pattern="CRLF_INJECTION_LOGS"/>
+      <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Or>
+  </Match>
+
+</FindBugsFilter>

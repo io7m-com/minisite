@@ -36,31 +36,32 @@ import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.License;
 import org.apache.maven.model.Scm;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.xml.sax.SAXException;
+import org.apache.maven.settings.Settings;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
@@ -177,9 +178,19 @@ public final class MinSiteMojo extends AbstractMojo
     required = false)
   private String outputDirectory;
 
+  /**
+   * The current Maven settings.
+   */
+
+  @Parameter(
+    defaultValue = "${settings}",
+    readonly = true,
+    required = true)
+  private Settings settings;
+
   @Override
   public void execute()
-    throws MojoExecutionException, MojoFailureException
+    throws MojoFailureException
   {
     if (this.skip) {
       return;
@@ -196,7 +207,7 @@ public final class MinSiteMojo extends AbstractMojo
         .setDocumentation(this.documentation())
         .setRelease(this.project.getVersion())
         .setSources(this.sources())
-        .setLicense(this.license())
+        .setLicense(this.license(log))
         .setBugTracker(this.bugTracker())
         .setOverview(this.overview())
         .setFeatures(this.features())
@@ -225,71 +236,71 @@ public final class MinSiteMojo extends AbstractMojo
       final Path file_tmp = directory.resolve("index.xhtml.tmp");
       MinXHTMLReindent.indent(file_output, file_tmp, file_output);
 
-    } catch (final IOException
-      | TransformerException
-      | ClassNotFoundException
-      | SAXException
-      | IllegalAccessException
-      | ParserConfigurationException
-      | InstantiationException e) {
+    } catch (final UncheckedIOException e) {
+      throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
+    } catch (final Exception e) {
       throw new MojoFailureException(e.getMessage(), e);
     }
 
-    config.changelog().ifPresent(changes_config -> {
-      final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
-        ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
+    try {
+      config.changelog().ifPresent(changes_config -> {
+        final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
+          ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
 
-      if (!parser_provider_opt.isPresent()) {
-        throw new NoSuchElementException(
-          "No XML changelog parser providers are available");
-      }
-
-      final Optional<CAtomChangelogWriterProviderType> writer_provider_opt =
-        ServiceLoader.load(CAtomChangelogWriterProviderType.class).findFirst();
-
-      if (!writer_provider_opt.isPresent()) {
-        throw new NoSuchElementException(
-          "No Atom changelog writer providers are available");
-      }
-
-      final CXMLChangelogParserProviderType parser_provider =
-        parser_provider_opt.get();
-      final CAtomChangelogWriterProviderType writer_provider =
-        writer_provider_opt.get();
-
-      try (final InputStream input =
-             Files.newInputStream(changes_config.file())) {
-
-        final CXMLChangelogParserType parser =
-          parser_provider.create(
-            changes_config.file().toUri(),
-            input,
-            ErrorHandlers.loggingHandler(log));
-
-        final CChangelog changelog = parser.parse();
-
-        final CAtomChangelogWriterConfiguration meta =
-          CAtomChangelogWriterConfiguration.builder()
-            .setAuthorEmail(changes_config.feedEmail())
-            .setAuthorName("minisite")
-            .setUpdated(ZonedDateTime.now(ZoneId.of("UTC")))
-            .setTitle(config.projectName() + " Releases")
-            .setUri(URI.create(this.project.getUrl() + "/releases.atom"))
-            .build();
-
-        final Path releases = directory.resolve("releases.atom");
-        try (final OutputStream output = Files.newOutputStream(releases)) {
-          final CAtomChangelogWriterType writer =
-            writer_provider.createWithConfiguration(
-              meta,
-              changes_config.file().toUri(),
-              output);
-          writer.write(changelog);
+        if (!parser_provider_opt.isPresent()) {
+          throw new NoSuchElementException(
+            "No XML changelog parser providers are available");
         }
-      } catch (final IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    });
+
+        final Optional<CAtomChangelogWriterProviderType> writer_provider_opt =
+          ServiceLoader.load(CAtomChangelogWriterProviderType.class).findFirst();
+
+        if (!writer_provider_opt.isPresent()) {
+          throw new NoSuchElementException(
+            "No Atom changelog writer providers are available");
+        }
+
+        final CXMLChangelogParserProviderType parser_provider =
+          parser_provider_opt.get();
+        final CAtomChangelogWriterProviderType writer_provider =
+          writer_provider_opt.get();
+
+        try (final InputStream input =
+               Files.newInputStream(changes_config.file())) {
+
+          final CXMLChangelogParserType parser =
+            parser_provider.create(
+              changes_config.file().toUri(),
+              input,
+              ErrorHandlers.loggingHandler(log));
+
+          final CChangelog changelog = parser.parse();
+
+          final CAtomChangelogWriterConfiguration meta =
+            CAtomChangelogWriterConfiguration.builder()
+              .setAuthorEmail(changes_config.feedEmail())
+              .setAuthorName("minisite")
+              .setUpdated(ZonedDateTime.now(ZoneId.of("UTC")))
+              .setTitle(config.projectName() + " Releases")
+              .setUri(URI.create(this.project.getUrl() + "/releases.atom"))
+              .build();
+
+          final Path releases = directory.resolve("releases.atom");
+          try (final OutputStream output = Files.newOutputStream(releases)) {
+            final CAtomChangelogWriterType writer =
+              writer_provider.createWithConfiguration(
+                meta,
+                changes_config.file().toUri(),
+                output);
+            writer.write(changelog);
+          }
+        } catch (final IOException e) {
+          throw new UncheckedIOException(e);
+        }
+      });
+    } catch (final UncheckedIOException e) {
+      throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
+    }
 
     if (this.resourceDirectory != null) {
       log.debug("copying resources");
@@ -298,7 +309,7 @@ public final class MinSiteMojo extends AbstractMojo
           Paths.get(this.resourceDirectory),
           new CopyTreeVisitor(Paths.get(this.outputDirectory)));
       } catch (final IOException e) {
-        throw new UncheckedIOException(e);
+        throw new MojoFailureException(e.getMessage(), e);
       }
     }
   }
@@ -351,15 +362,19 @@ public final class MinSiteMojo extends AbstractMojo
     return Optional.empty();
   }
 
-  private Optional<Path> license()
+  private Optional<Path> license(final Log log)
   {
     return this.project.getLicenses().stream().findFirst().map(license -> {
       try {
         final URL url = this.transformURIToPath(license);
+
+        final Proxy net_proxy = configureProxyForURL(log, this.settings, url);
         final Path path = Files.createTempFile("minisite-", ".txt");
         try (final OutputStream out = Files.newOutputStream(path)) {
+          final URLConnection conn = url.openConnection(net_proxy);
+          conn.connect();
 
-          try (final InputStream input = url.openStream()) {
+          try (final InputStream input = conn.getInputStream()) {
             final byte[] buffer = new byte[1024];
             while (true) {
               final int r = input.read(buffer);
@@ -375,6 +390,72 @@ public final class MinSiteMojo extends AbstractMojo
         throw new UncheckedIOException(e);
       }
     });
+  }
+
+  private static Proxy configureProxyForURL(
+    final Log log,
+    final Settings settings,
+    final URL url)
+  {
+    final String target_protocol = url.getProtocol();
+    for (final org.apache.maven.settings.Proxy maven_proxy : settings.getProxies()) {
+
+      /*
+       * Ignore inactive proxies.
+       */
+
+      if (!maven_proxy.isActive()) {
+        log.debug(new StringBuilder(32)
+                    .append("proxy ")
+                    .append(maven_proxy.getId())
+                    .append(" is not active, ignoring")
+                    .toString());
+        continue;
+      }
+
+      /*
+       * Try to find a proxy with the right protocol.
+       */
+
+      final String proxy_protocol = maven_proxy.getProtocol();
+      if (!Objects.equals(proxy_protocol, target_protocol)) {
+        log.debug(new StringBuilder(32)
+                    .append("proxy ")
+                    .append(maven_proxy.getId())
+                    .append(" protocol ")
+                    .append(proxy_protocol)
+                    .append(" does not match target protocol ")
+                    .append(target_protocol)
+                    .append(", ignoring")
+                    .toString());
+        continue;
+      }
+
+      /*
+       * Assume an HTTP(s) proxy without authentication.
+       * XXX: Add authentication!
+       */
+
+      if ("http".equalsIgnoreCase(target_protocol)
+        || "https".equalsIgnoreCase(target_protocol)) {
+
+        log.info(new StringBuilder(32)
+                   .append("using proxy ")
+                   .append(maven_proxy.getId())
+                   .append(" as http/https proxy")
+                   .toString());
+        return new Proxy(
+          Proxy.Type.HTTP,
+          InetSocketAddress.createUnresolved(
+            maven_proxy.getHost(),
+            maven_proxy.getPort()));
+      }
+
+      log.warn("do not know how to configure a non-http(s) proxy");
+    }
+
+    log.debug("no usable proxy found");
+    return Proxy.NO_PROXY;
   }
 
   private URL transformURIToPath(

@@ -26,11 +26,7 @@ import com.io7m.minisite.core.MinXHTMLReindent;
 import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.Serializer;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
@@ -46,7 +42,7 @@ public final class Demo
 
   public static void main(
     final String[] args)
-    throws IOException
+    throws Exception
   {
     final MinConfiguration c =
       MinConfiguration.builder()
@@ -74,32 +70,22 @@ public final class Demo
 
     final MinSite site = MinSite.create(c);
 
-    try {
-      final Path directory = Paths.get("/shared-tmp");
-      Files.createDirectories(directory);
+    final Path directory = Paths.get("/shared-tmp");
+    Files.createDirectories(directory);
 
-      final Path file_output = directory.resolve("index.xhtml");
-      try (final OutputStream output = Files.newOutputStream(file_output)) {
-        final Document doc = new Document(site.document());
-        doc.setDocType(new DocType(
-          "html",
-          "-//W3C//DTD XHTML 1.0 Strict//EN",
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"));
-        final Serializer serial = new Serializer(output, "UTF-8");
-        serial.write(doc);
-        serial.flush();
-      }
-
-      final Path file_tmp = directory.resolve("index.xhtml.tmp");
-      MinXHTMLReindent.indent(file_output, file_tmp, file_output);
-    } catch (final IOException
-      | TransformerException
-      | ClassNotFoundException
-      | SAXException
-      | IllegalAccessException
-      | ParserConfigurationException
-      | InstantiationException e) {
-      throw new IOException(e);
+    final Path file_output = directory.resolve("index.xhtml");
+    try (final OutputStream output = Files.newOutputStream(file_output)) {
+      final Document doc = new Document(site.document());
+      doc.setDocType(new DocType(
+        "html",
+        "-//W3C//DTD XHTML 1.0 Strict//EN",
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"));
+      final Serializer serial = new Serializer(output, "UTF-8");
+      serial.write(doc);
+      serial.flush();
     }
+
+    final Path file_tmp = directory.resolve("index.xhtml.tmp");
+    MinXHTMLReindent.indent(file_output, file_tmp, file_output);
   }
 }
