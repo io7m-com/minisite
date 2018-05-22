@@ -16,6 +16,7 @@
 
 package com.io7m.minisite.core;
 
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 import java.nio.file.Path;
@@ -25,7 +26,7 @@ import java.nio.file.Path;
  */
 
 @Value.Immutable
-@MinImmutableStyleType
+@ImmutablesStyleType
 public interface MinChangesConfigurationType
 {
   /**
