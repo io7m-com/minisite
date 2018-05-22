@@ -1,4 +1,4 @@
-com.io7m.minisite 0.0.9 Documentation
+com.io7m.minisite 0.0.10 Documentation
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Contents
@@ -140,7 +140,7 @@ com.io7m.minisite 0.0.9 Documentation
                   <documentationFile>src/site/resources/documentation.xml</documentationFile>
                   <changelogFile>README-CHANGES.xml</changelogFile>
                   <changelogFeedEmail>contact@io7m.com</changelogFeedEmail>
-                  <outputDirectory>/home/someone/git/com.github/io7m/minisite/com.io7m.minisite.documentation/target/minisite</outputDirectory>
+                  <outputDirectory>/home/rm/git/com.github/io7m/minisite/com.io7m.minisite.documentation/target/minisite</outputDirectory>
                   <resourcesDirectory>${project.base.directory}/src/site/resources</resourcesDirectory>
                 </configuration>
               </execution>
