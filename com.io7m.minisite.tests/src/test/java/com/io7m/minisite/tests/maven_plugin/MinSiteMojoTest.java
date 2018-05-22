@@ -18,6 +18,7 @@ package com.io7m.minisite.tests.maven_plugin;
 
 import io.takari.maven.testing.TestMavenRuntime;
 import io.takari.maven.testing.TestResources;
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -150,7 +151,7 @@ public final class MinSiteMojoTest
   {
     final File basedir = this.resources.getBasedir(
       "optional_files_missing_features");
-    this.expected.expect(UncheckedIOException.class);
+    this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
     this.maven.executeMojo(basedir, "generateSite");
   }
@@ -161,7 +162,7 @@ public final class MinSiteMojoTest
   {
     final File basedir = this.resources.getBasedir(
       "optional_files_missing_overview");
-    this.expected.expect(UncheckedIOException.class);
+    this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
     this.maven.executeMojo(basedir, "generateSite");
   }
@@ -172,7 +173,7 @@ public final class MinSiteMojoTest
   {
     final File basedir = this.resources.getBasedir(
       "optional_files_missing_changes");
-    this.expected.expect(UncheckedIOException.class);
+    this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
     this.maven.executeMojo(basedir, "generateSite");
   }

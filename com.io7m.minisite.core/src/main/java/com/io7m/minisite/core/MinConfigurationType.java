@@ -16,6 +16,7 @@
 
 package com.io7m.minisite.core;
 
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import io.vavr.collection.Vector;
 import org.immutables.value.Value;
 import org.immutables.vavr.encodings.VavrEncodingEnabled;
@@ -29,7 +30,7 @@ import java.util.Optional;
 
 @Value.Immutable
 @VavrEncodingEnabled
-@MinImmutableStyleType
+@ImmutablesStyleType
 public interface MinConfigurationType
 {
   /**

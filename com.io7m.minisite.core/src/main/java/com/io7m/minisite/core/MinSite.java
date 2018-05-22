@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -44,6 +43,9 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A site generator.
@@ -117,10 +119,11 @@ public final class MinSite
     final CXMLChangelogParserProviderType parser_provider =
       parser_provider_opt.get();
 
-    try (InputStream input = Files.newInputStream(changes_config.file())) {
+    final Path changes_file = changes_config.file();
+    try (InputStream input = Files.newInputStream(changes_file)) {
       final CXMLChangelogParserType parser =
         parser_provider.create(
-          changes_config.file().toUri(),
+          changes_file.toUri(),
           input,
           CParseErrorHandlers.loggingHandler(LOG));
 
@@ -221,9 +224,10 @@ public final class MinSite
 
     final Element pre = new Element("pre", MinXHTML.XHTML);
     try {
-      pre.appendChild(new String(
-        Files.readAllBytes(path),
-        StandardCharsets.UTF_8));
+      pre.appendChild(
+        Files.readAllLines(path, UTF_8)
+          .stream()
+          .collect(Collectors.joining(System.lineSeparator())));
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -283,20 +287,14 @@ public final class MinSite
     final Element style = new Element("style", MinXHTML.XHTML);
     style.addAttribute(new Attribute("type", "text/css"));
 
-    try (InputStream stream = MinSite.class.getResourceAsStream(
-      "style.css")) {
+    try (InputStream stream = MinSite.class.getResourceAsStream("style.css")) {
       try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-        final byte[] buffer = new byte[1024];
-        while (true) {
-          final int r = stream.read(buffer);
-          if (r <= 0) {
-            break;
-          }
-          out.write(buffer, 0, r);
-        }
-        style.appendChild(new String(
-          out.toByteArray(),
-          StandardCharsets.UTF_8));
+        stream.transferTo(out);
+
+        // "String instantiations should be avoided"
+        // CHECKSTYLE:OFF
+        style.appendChild(new String(out.toByteArray(), UTF_8));
+        // CHECKSTYLE:ON
       }
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
@@ -456,10 +454,11 @@ public final class MinSite
         .append("%7Cjar")
         .toString();
 
+    final String separator = System.lineSeparator();
     pre.appendChild(
       new StringBuilder(64)
         .append("<dependency>")
-        .append(System.lineSeparator())
+        .append(separator)
         .append("  <groupId>")
         .toString());
 
@@ -468,7 +467,7 @@ public final class MinSite
     pre.appendChild(
       new StringBuilder(64)
         .append("</groupId>")
-        .append(System.lineSeparator())
+        .append(separator)
         .append("  <artifactId>")
         .toString());
 
@@ -477,7 +476,7 @@ public final class MinSite
     pre.appendChild(
       new StringBuilder(64)
         .append("</artifactId>")
-        .append(System.lineSeparator())
+        .append(separator)
         .append("  <version>")
         .toString());
 
@@ -486,10 +485,10 @@ public final class MinSite
     pre.appendChild(
       new StringBuilder(64)
         .append("</version>")
-        .append(System.lineSeparator())
+        .append(separator)
         .append("</dependency>")
-        .append(System.lineSeparator())
-        .append(System.lineSeparator())
+        .append(separator)
+        .append(separator)
         .toString());
   }
 

@@ -16,9 +16,11 @@
 
 package com.io7m.minisite.core;
 
-import java.util.Objects;
 import nu.xom.Attribute;
 import nu.xom.Element;
+
+import java.net.URI;
+import java.util.Objects;
 
 /**
  * A source provider for git repositories.
@@ -59,8 +61,10 @@ public final class MinSourcesGitProvider implements MinSourcesProviderType
       documentation.appendChild(p);
     }
 
+    final URI configuration_uri = configuration.uri();
+    final String uri_text = configuration_uri.toString();
+
     {
-      final String uri_text = configuration.uri().toString();
       final Element p = new Element("p", MinXHTML.XHTML);
       p.appendChild("Repository: ");
       p.appendChild(MinXHTML.link(uri_text, uri_text));
@@ -68,7 +72,6 @@ public final class MinSourcesGitProvider implements MinSourcesProviderType
     }
 
     {
-      final String uri_text = configuration.uri().toString();
       final Element p = new Element("pre", MinXHTML.XHTML);
       p.appendChild("$ git clone ");
       p.appendChild(uri_text);
