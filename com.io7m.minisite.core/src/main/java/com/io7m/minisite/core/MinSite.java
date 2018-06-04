@@ -282,24 +282,13 @@ public final class MinSite
     return MinXHTML.link("#maven", "Maven");
   }
 
-  private static Element css()
+  private static Element css(final String name)
   {
-    final Element style = new Element("style", MinXHTML.XHTML);
+    Objects.requireNonNull(name, "name");
+    final Element style = new Element("link", MinXHTML.XHTML);
     style.addAttribute(new Attribute("type", "text/css"));
-
-    try (InputStream stream = MinSite.class.getResourceAsStream("style.css")) {
-      try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-        stream.transferTo(out);
-
-        // "String instantiations should be avoided"
-        // CHECKSTYLE:OFF
-        style.appendChild(new String(out.toByteArray(), UTF_8));
-        // CHECKSTYLE:ON
-      }
-    } catch (final IOException e) {
-      throw new UncheckedIOException(e);
-    }
-
+    style.addAttribute(new Attribute("rel", "stylesheet"));
+    style.addAttribute(new Attribute("href", name));
     return style;
   }
 
@@ -651,7 +640,7 @@ public final class MinSite
 
     head.appendChild(metaGenerator());
     head.appendChild(metaType());
-    head.appendChild(css());
+    this.config.cssIncludes().forEach(name -> head.appendChild(css(name)));
     head.appendChild(title);
     return head;
   }

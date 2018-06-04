@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
   </parent>
 
   <artifactId>com.io7m.minisite.core</artifactId>
@@ -40,6 +40,10 @@
       <groupId>com.io7m.changelog</groupId>
       <artifactId>com.io7m.changelog.xml.vanilla</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -50,17 +54,8 @@
       <artifactId>xml-apis</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.vavr</groupId>
-      <artifactId>vavr</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.immutables.vavr</groupId>
-      <artifactId>vavr-encodings</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
