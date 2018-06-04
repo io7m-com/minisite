@@ -55,6 +55,15 @@ from which site resources will be copied copied. This parameter is
 optional and defaults to [term [type parameter] "{project.base.directory}/src/site/resources"].
 
 [paragraph]
+The [term [type parameter] "cssGenerateDefault"] parameter specifies that
+the plugin should copy a default CSS style to the output directory. The parameter
+is optional and defaults to [term [type constant] true].
+
+[paragraph]
+The [term [type parameter] "cssStyles"] parameter specifies a list of
+CSS styles that should be imported by the generated site.
+
+[paragraph]
 The [term [type parameter] "documentation"] parameter specifies documentation.
 It takes a list of [term [type expression] "DocumentationItem"] values as
 parameters. Each [term [type expression] "DocumentationItem"] specifies a

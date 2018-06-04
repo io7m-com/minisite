@@ -35,6 +35,12 @@
             <changelogFeedEmail>contact@io7m.com</changelogFeedEmail>
             <outputDirectory>${project.build.directory}/minisite</outputDirectory>
             <resourcesDirectory>${project.base.directory}/src/site/resources</resourcesDirectory>
+            <cssGenerateDefault>true</cssGenerateDefault>
+            <cssStyles>
+              <cssStyle>minisite.css</cssStyle>
+              <cssStyle>example0.css</cssStyle>
+              <cssStyle>example1.css</cssStyle>
+            </cssStyles>
           </configuration>
         </execution>
       </executions>
