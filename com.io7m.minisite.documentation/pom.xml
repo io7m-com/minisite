@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11-SNAPSHOT</version>
   </parent>
 
   <artifactId>com.io7m.minisite.documentation</artifactId>
@@ -38,11 +38,6 @@
     <dependency>
       <groupId>com.io7m.immutables.style</groupId>
       <artifactId>com.io7m.immutables.style</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.immutables.vavr</groupId>
-      <artifactId>vavr-encodings</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

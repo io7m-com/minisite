@@ -41,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
+import static io.takari.maven.testing.TestResources.assertFilesNotPresent;
 import static io.takari.maven.testing.TestResources.assertFilesPresent;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
@@ -99,6 +100,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("optional_files");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -126,6 +128,7 @@ public final class MinSiteMojoTest
       "optional_files_empty_changes");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -185,6 +188,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("licenses");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -211,6 +215,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("licenses_local");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -237,6 +242,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("issues");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -263,6 +269,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("scm_git");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -289,6 +296,7 @@ public final class MinSiteMojoTest
     final File basedir = this.resources.getBasedir("scm_unknown");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
 
     final Path file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
@@ -306,5 +314,15 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+  }
+
+  @Test
+  public void testNoCSS()
+    throws Exception
+  {
+    final File basedir = this.resources.getBasedir("no_css");
+    this.maven.executeMojo(basedir, "generateSite");
+    assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesNotPresent(basedir, "target/minisite/minisite.css");
   }
 }

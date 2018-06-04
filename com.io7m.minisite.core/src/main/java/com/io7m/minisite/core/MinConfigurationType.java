@@ -17,11 +17,10 @@
 package com.io7m.minisite.core;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import io.vavr.collection.Vector;
 import org.immutables.value.Value;
-import org.immutables.vavr.encodings.VavrEncodingEnabled;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +28,6 @@ import java.util.Optional;
  */
 
 @Value.Immutable
-@VavrEncodingEnabled
 @ImmutablesStyleType
 public interface MinConfigurationType
 {
@@ -52,7 +50,7 @@ public interface MinConfigurationType
    */
 
   @Value.Parameter
-  Vector<String> projectModules();
+  List<String> projectModules();
 
   /**
    * @return The version number of the current release
@@ -116,4 +114,26 @@ public interface MinConfigurationType
 
   @Value.Parameter
   Optional<MinSourcesConfiguration> sources();
+
+  /**
+   * @return The list of stylesheets that will be included by the generated site
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default List<String> cssIncludes()
+  {
+    return List.of("minisite.css", "site.css");
+  }
+
+  /**
+   * @return {@code true} if the default style should be copied to the generated site directory
+   */
+
+  @Value.Default
+  @Value.Parameter
+  default boolean cssGenerateStyle()
+  {
+    return true;
+  }
 }

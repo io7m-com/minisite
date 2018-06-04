@@ -28,7 +28,6 @@ import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
 import com.io7m.minisite.core.MinXHTMLReindent;
-import io.vavr.collection.Vector;
 import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.Serializer;
@@ -60,6 +59,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -179,6 +179,29 @@ public final class MinSiteMojo extends AbstractMojo
   private String outputDirectory;
 
   /**
+   * The CSS styles that will be included.
+   */
+
+  @Parameter(
+    name = "cssStyles",
+    required = false)
+  private String[] cssStyles = {
+    "minisite.css",
+    "site.css"
+  };
+
+  /**
+   * A specification of whether or not the default CSS style should be copied
+   * to the generated site.
+   */
+
+  @Parameter(
+    name = "cssGenerateDefault",
+    defaultValue = "true",
+    required = false)
+  private boolean cssGenerateDefault;
+
+  /**
    * The current Maven settings.
    */
 
@@ -212,6 +235,8 @@ public final class MinSiteMojo extends AbstractMojo
         .setOverview(this.overview())
         .setFeatures(this.features())
         .setChangelog(this.changelog())
+        .setCssGenerateStyle(this.cssGenerateDefault)
+        .setCssIncludes(List.of(this.cssStyles))
         .setCentralReposPath(this.project.getGroupId().replace(".", "/"))
         .build();
 
@@ -236,6 +261,22 @@ public final class MinSiteMojo extends AbstractMojo
       final Path file_tmp = directory.resolve("index.xhtml.tmp");
       MinXHTMLReindent.indent(file_output, file_tmp, file_output);
 
+    } catch (final UncheckedIOException e) {
+      throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
+    } catch (final Exception e) {
+      throw new MojoFailureException(e.getMessage(), e);
+    }
+
+    try {
+      if (config.cssGenerateStyle()) {
+        final Path file_output = directory.resolve("minisite.css");
+        try (final OutputStream out = Files.newOutputStream(file_output)) {
+          try (final InputStream in =
+                 MinSite.class.getResourceAsStream("minisite.css")) {
+            in.transferTo(out);
+          }
+        }
+      }
     } catch (final UncheckedIOException e) {
       throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
     } catch (final Exception e) {
@@ -323,13 +364,13 @@ public final class MinSiteMojo extends AbstractMojo
     return Optional.empty();
   }
 
-  private Vector<String> modules()
+  private List<String> modules()
   {
     /// XXX: Possibly incorrect assumptions:
     /// 1. Module names match their artifact IDs.
     /// 2. Module groupIds match that of their parent module.
     /// 3. Modules don't have child modules.
-    return Vector.ofAll(this.project.getModules());
+    return this.project.getModules();
   }
 
   private Optional<Path> features()

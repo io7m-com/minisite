@@ -11,7 +11,7 @@
 
   <groupId>com.io7m.minisite</groupId>
   <artifactId>com.io7m.minisite</artifactId>
-  <version>0.0.10</version>
+  <version>0.0.11-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>com.io7m.minisite</name>
@@ -26,9 +26,9 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>0.0.9</io7m.api.previousVersion>
+    <io7m.api.previousVersion>0.0.10</io7m.api.previousVersion>
     <com.io7m.changelog.version>4.0.0-beta0009</com.io7m.changelog.version>
-    <io7m.org.immutables.version>2.6.0</io7m.org.immutables.version>
+    <io7m.org.immutables.version>2.6.1</io7m.org.immutables.version>
     <io7m.maven-api.version>3.5.3</io7m.maven-api.version>
   </properties>
 
@@ -137,11 +137,6 @@
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
         <version>${io7m.org.immutables.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.immutables.vavr</groupId>
-        <artifactId>vavr-encodings</artifactId>
-        <version>0.5.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.immutables.style</groupId>
