@@ -11,7 +11,7 @@
 
   <groupId>com.io7m.minisite</groupId>
   <artifactId>com.io7m.minisite</artifactId>
-  <version>0.0.11</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <name>com.io7m.minisite</name>
@@ -63,9 +63,9 @@
 
   <distributionManagement>
     <site>
-      <id>GitHub</id>
-      <name>GitHub</name>
-      <url>http://io7m.github.io/minisite</url>
+      <id>io7m.com</id>
+      <name>io7m.com</name>
+      <url>https://www.io7m.com/software/minisite</url>
     </site>
     <repository>
       <id>sonatype-nexus-staging</id>
