@@ -4,9 +4,14 @@
     <c:release date="2018-07-02T00:00:00+00:00" ticket-system="com.io7m.github.minisite" version="1.0.0">
       <c:changes/>
     </c:release>
-    <c:release date="2018-08-26T13:31:03+00:00" ticket-system="com.io7m.github.minisite" version="1.0.1">
+    <c:release date="2018-08-27T08:39:19+00:00" ticket-system="com.io7m.github.minisite" version="1.0.1">
       <c:changes>
-        <c:change date="2018-08-26T13:31:03+00:00" summary="Use com.io7m.changelog 4.0.0-beta0011"/>
+        <c:change date="2018-08-26T00:00:00+00:00" summary="Use com.io7m.changelog 4.0.0-beta0011"/>
+        <c:change date="2018-08-27T08:39:19+00:00" summary="Exclude xom dependencies due to an incompatibility problem.">
+          <c:tickets>
+            <c:ticket id="2"/>
+          </c:tickets>
+        </c:change>
       </c:changes>
     </c:release>
   </c:releases>
