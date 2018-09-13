@@ -27,7 +27,6 @@ import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
-import com.io7m.minisite.core.MinXHTMLReindent;
 import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.Serializer;
@@ -268,9 +267,6 @@ public final class MinSiteMojo extends AbstractMojo
         serial.write(doc);
         serial.flush();
       }
-
-      final Path file_tmp = directory.resolve("index.xhtml.tmp");
-      MinXHTMLReindent.indent(file_output, file_tmp, file_output);
 
     } catch (final UncheckedIOException e) {
       throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
