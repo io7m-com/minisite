@@ -22,7 +22,6 @@ import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
-import com.io7m.minisite.core.MinXHTMLReindent;
 import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.Serializer;
@@ -47,13 +46,14 @@ public final class Demo
     final MinConfiguration c =
       MinConfiguration.builder()
         .setProjectName("com.io7m.r2")
+        .setProjectGroupName("com.io7m.r2")
         .setRelease("0.3.0")
         .setCentralReposPath("/com/io7m/r2/")
-        .setOverview(Paths.get("overview.xml"))
-        .setFeatures(Paths.get("features.xml"))
+        .setOverview(Paths.get("src/site/resources/overview.xml"))
+        .setFeatures(Paths.get("src/site/resources/features.xml"))
         .setChangelog(MinChangesConfiguration.builder()
                         .setFeedEmail("nobody@example.com")
-                        .setFile(Paths.get("/tmp/README-CHANGES.xml"))
+                        .setFile(Paths.get("README-CHANGES.xml"))
                         .build())
         .setLicense(Paths.get("README-LICENSE.txt"))
         .setSources(
@@ -84,8 +84,5 @@ public final class Demo
       serial.write(doc);
       serial.flush();
     }
-
-    final Path file_tmp = directory.resolve("index.xhtml.tmp");
-    MinXHTMLReindent.indent(file_output, file_tmp, file_output);
   }
 }

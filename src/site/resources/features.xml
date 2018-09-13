@@ -3,7 +3,7 @@
 <div xmlns="http://www.w3.org/1999/xhtml">
   <ul>
     <li>Single-page, static, XHTML 1.0 Strict, Javascript-free sites</li>
-    <li>Optional <a href="http://io7m.github.io/changelog/">com.io7m.changelog</a> integration</li>
+    <li>Optional <a href="https://www.io7m.com/software/changelog/">com.io7m.changelog</a> integration</li>
     <li><a href="https://www.osgi.org/">OSGi</a>-ready</li>
     <li>ISC license</li>
   </ul>

@@ -36,8 +36,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Reindent XHTML files.
+ *
+ * @deprecated Reindenting tends to break XHTML. Do not do it.
  */
 
+@Deprecated(since = "2.0.0", forRemoval = true)
 public final class MinXHTMLReindent
 {
   private MinXHTMLReindent()
@@ -46,9 +49,8 @@ public final class MinXHTMLReindent
   }
 
   /**
-   * Read the file at {@code path_input}, indent it and write the output to
-   * {@code path_tmp}, then atomically rename {@code path_tmp} to {@code
-   * path_output}.
+   * Read the file at {@code path_input}, indent it and write the output to {@code path_tmp}, then
+   * atomically rename {@code path_tmp} to {@code path_output}.
    *
    * @param path_input  The input file
    * @param path_tmp    The temporary output file
