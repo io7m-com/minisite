@@ -67,6 +67,13 @@ public interface MinConfigurationType
   String centralReposPath();
 
   /**
+   * @return An XHTML file containing a header inserted above the title and logo in generated sites.
+   */
+
+  @Value.Parameter
+  Optional<Path> header();
+
+  /**
    * @return An XHTML file containing an overview of the project
    */
 

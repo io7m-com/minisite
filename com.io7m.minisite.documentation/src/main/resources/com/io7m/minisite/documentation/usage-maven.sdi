@@ -35,6 +35,11 @@ file that will be inserted into the [term [type term] features] section of
 the generated site.
 
 [paragraph]
+The [term [type parameter] "headerFile"] parameter specifies an XHTML
+file that will be inserted into the header section of the generated site
+"(" above the logo and title ")".
+
+[paragraph]
 The [term [type parameter] "changelogFile"] parameter specifies an XML
 changelog in [link-ext [target "http://io7m.github.io/changelog"] changelog]
 format that will be converted into XHTML for the generated site. If no
