@@ -126,6 +126,16 @@ public final class MinSiteMojo extends AbstractMojo
   private String featuresFile;
 
   /**
+   * The header file.
+   */
+
+  @Parameter(
+    name = "headerFile",
+    property = "minisite.headerFile",
+    required = false)
+  private String headerFile;
+
+  /**
    * The documentation configuration.
    */
 
@@ -230,6 +240,7 @@ public final class MinSiteMojo extends AbstractMojo
         .setDocumentation(this.documentation())
         .setRelease(this.project.getVersion())
         .setSources(this.sources())
+        .setHeader(this.header())
         .setLicense(this.license(log))
         .setBugTracker(this.bugTracker())
         .setOverview(this.overview())
@@ -378,6 +389,15 @@ public final class MinSiteMojo extends AbstractMojo
     if (this.featuresFile != null) {
       return Optional.of(
         this.project.getBasedir().toPath().resolve(this.featuresFile));
+    }
+    return Optional.empty();
+  }
+
+  private Optional<Path> header()
+  {
+    if (this.headerFile != null) {
+      return Optional.of(
+        this.project.getBasedir().toPath().resolve(this.headerFile));
     }
     return Optional.empty();
   }

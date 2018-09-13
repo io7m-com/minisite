@@ -149,6 +149,22 @@ public final class MinSiteMojoTest
   }
 
   @Test
+  public void testOptionalHeader()
+    throws Exception
+  {
+    final File basedir = this.resources.getBasedir(
+      "optional_files_header");
+    this.maven.executeMojo(basedir, "generateSite");
+    assertFilesPresent(basedir, "target/minisite/index.xhtml");
+    assertFilesPresent(basedir, "target/minisite/minisite.css");
+
+    final Path file =
+      basedir.toPath().resolve("target/minisite/index.xhtml");
+    Assert.assertEquals(
+      "true", xpathOn(file, "//@id=\"header\""));
+  }
+
+  @Test
   public void testOptionalFilesMissingFeatures()
     throws Exception
   {

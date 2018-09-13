@@ -146,8 +146,7 @@ public final class MinSite
         p.appendChild("No formal releases have been made.");
         changes.appendChild(p);
       } else {
-        changes.appendChild(
-          serializeChangelog(writer_provider_opt.get(), changelog).copy());
+        changes.appendChild(serializeChangelog(writer_provider_opt.get(), changelog).copy());
       }
 
       return changes;
@@ -322,94 +321,24 @@ public final class MinSite
     return version == null ? "UNKNOWN" : version;
   }
 
-  /**
-   * Generate a site.
-   *
-   * @return A generated page
-   */
-
-  public Element document()
+  private static Element header(final Path path)
   {
-    final Element head = this.head();
-    final Element body = this.body();
-
-    final Element xhtml = new Element("html", MinXHTML.XHTML);
-    xhtml.appendChild(head);
-    xhtml.appendChild(body);
-    return xhtml;
-  }
-
-  private Element body()
-  {
-    final Element body = new Element("body", MinXHTML.XHTML);
-    final Element main = this.main();
-
-    body.appendChild(main);
-    return body;
-  }
-
-  private Element main()
-  {
-    final Element main = new Element("div", MinXHTML.XHTML);
-    main.addAttribute(new Attribute("id", "main"));
-    main.appendChild(this.overview());
-    main.appendChild(this.contents());
-
-    this.config.features().ifPresent(
-      path -> main.appendChild(features(path)));
-
-    main.appendChild(this.releases());
-
-    this.config.documentation().ifPresent(
-      path -> main.appendChild(this.documentation(path)));
-
-    main.appendChild(this.maven());
-
-    this.config.changelog().ifPresent(
-      changelog -> main.appendChild(changelog(changelog)));
-    this.config.sources().ifPresent(
-      sources -> main.appendChild(sources(sources)));
-    this.config.license().ifPresent(
-      path -> main.appendChild(license(path)));
-    this.config.bugTracker().ifPresent(
-      tracker -> main.appendChild(bugTracker(tracker)));
-
-    return main;
-  }
-
-  private Element maven()
-  {
-    final Element maven = new Element("div", MinXHTML.XHTML);
-    maven.addAttribute(new Attribute("id", "maven"));
-    maven.appendChild(MinXHTML.h2("Maven"));
+    final Element header = new Element("div", MinXHTML.XHTML);
+    header.addAttribute(new Attribute("id", "header"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild(
-        "The following is a complete list of the project's modules expressed as Maven dependencies: ");
-      maven.appendChild(p);
-    }
-
-    {
-      final Element pre = new Element("pre", MinXHTML.XHTML);
-      final String group = this.config.projectGroupName();
-      final String version = this.config.release();
-      mavenDependency(pre, this.config.projectName(), group, version);
-      for (final String module : this.config.projectModules()) {
-        mavenDependency(pre, module, group, version);
+      final Builder b = new Builder();
+      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
+        final Document doc = b.build(stream);
+        header.appendChild(doc.getRootElement().copy());
+      } catch (final IOException e) {
+        throw new UncheckedIOException(e);
+      } catch (final ParsingException e) {
+        throw new UncheckedIOException(new IOException(e));
       }
-      maven.appendChild(pre);
     }
 
-    {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("Each release of the project is made available on ");
-      p.appendChild(MinXHTML.link("http://search.maven.org", "Maven Central"));
-      p.appendChild(" within ten minutes of the release announcement.");
-      maven.appendChild(p);
-    }
-
-    return maven;
+    return header;
   }
 
   private static void mavenDependency(
@@ -479,6 +408,93 @@ public final class MinSite
         .append(separator)
         .append(separator)
         .toString());
+  }
+
+  /**
+   * Generate a site.
+   *
+   * @return A generated page
+   */
+
+  public Element document()
+  {
+    final Element head = this.head();
+    final Element body = this.body();
+
+    final Element xhtml = new Element("html", MinXHTML.XHTML);
+    xhtml.appendChild(head);
+    xhtml.appendChild(body);
+    return xhtml;
+  }
+
+  private Element body()
+  {
+    final Element body = new Element("body", MinXHTML.XHTML);
+    final Element main = this.main();
+
+    body.appendChild(main);
+    return body;
+  }
+
+  private Element main()
+  {
+    final Element main = new Element("div", MinXHTML.XHTML);
+    main.addAttribute(new Attribute("id", "main"));
+
+    this.config.header().ifPresent(path -> main.appendChild(header(path)));
+
+    main.appendChild(this.overview());
+    main.appendChild(this.contents());
+
+    this.config.features().ifPresent(path -> main.appendChild(features(path)));
+
+    main.appendChild(this.releases());
+
+    this.config.documentation().ifPresent(path -> main.appendChild(this.documentation(path)));
+
+    main.appendChild(this.maven());
+
+    this.config.changelog().ifPresent(changelog -> main.appendChild(changelog(changelog)));
+    this.config.sources().ifPresent(sources -> main.appendChild(sources(sources)));
+    this.config.license().ifPresent(path -> main.appendChild(license(path)));
+    this.config.bugTracker().ifPresent(tracker -> main.appendChild(bugTracker(tracker)));
+
+    return main;
+  }
+
+  private Element maven()
+  {
+    final Element maven = new Element("div", MinXHTML.XHTML);
+    maven.addAttribute(new Attribute("id", "maven"));
+    maven.appendChild(MinXHTML.h2("Maven"));
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild(
+        "The following is a complete list of the project's modules expressed as Maven dependencies: ");
+      maven.appendChild(p);
+    }
+
+    {
+      final Element pre = new Element("pre", MinXHTML.XHTML);
+      final String group = this.config.projectGroupName();
+      final String version = this.config.release();
+      mavenDependency(pre, this.config.projectName(), group, version);
+      for (final String module : this.config.projectModules()) {
+        mavenDependency(pre, module, group, version);
+      }
+      maven.appendChild(pre);
+    }
+
+    {
+      final Element p = new Element("p", MinXHTML.XHTML);
+      p.appendChild("Each release of the project is made available on ");
+      p.appendChild(MinXHTML.link("http://search.maven.org", "Maven Central"));
+      p.appendChild(" within ten minutes of the release announcement.");
+      maven.appendChild(p);
+    }
+
+    return maven;
   }
 
   private Element documentation(

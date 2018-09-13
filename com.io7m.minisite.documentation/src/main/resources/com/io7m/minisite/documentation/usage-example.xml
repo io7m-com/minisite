@@ -28,6 +28,7 @@
             <goal>generateSite</goal>
           </goals>
           <configuration>
+            <headerFile>src/site/resources/header.xml</headerFile>
             <overviewFile>src/site/resources/overview.xml</overviewFile>
             <featuresFile>src/site/resources/features.xml</featuresFile>
             <documentationFile>src/site/resources/documentation.xml</documentationFile>
