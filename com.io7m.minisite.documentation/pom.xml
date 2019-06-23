@@ -146,6 +146,8 @@
             </configuration>
           </execution>
           <!-- Produce aggregate dependency javadocs -->
+          <!-- https://issues.apache.org/jira/browse/MJAVADOC-588 -->
+          <!--
           <execution>
             <id>javadoc-aggregate</id>
             <phase>package</phase>
@@ -162,6 +164,7 @@
               </dependencySourceIncludes>
             </configuration>
           </execution>
+          -->
         </executions>
       </plugin>
 
