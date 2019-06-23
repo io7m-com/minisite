@@ -19,13 +19,18 @@
         </c:change>
       </c:changes>
     </c:release>
-    <c:release date="2018-09-13T14:09:53+00:00" ticket-system="com.io7m.github.minisite" version="2.0.1">
+    <c:release date="2018-09-13T00:00:00+00:00" ticket-system="com.io7m.github.minisite" version="2.0.1">
       <c:changes>
-        <c:change date="2018-09-13T14:09:53+00:00" summary="Stop reindenting XHTML output as this tends to break pages">
+        <c:change date="2018-09-13T00:00:00+00:00" summary="Stop reindenting XHTML output as this tends to break pages">
           <c:tickets>
             <c:ticket id="4"/>
           </c:tickets>
         </c:change>
+      </c:changes>
+    </c:release>
+    <c:release date="2019-06-23T19:41:05+00:00" ticket-system="com.io7m.github.minisite" version="3.0.0">
+      <c:changes>
+        <c:change compatible="false" date="2019-06-23T19:41:05+00:00" summary="Require JDK 11"/>
       </c:changes>
     </c:release>
   </c:releases>
