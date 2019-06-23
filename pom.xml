@@ -28,8 +28,8 @@
   <properties>
     <io7m.api.previousVersion>2.0.0</io7m.api.previousVersion>
     <com.io7m.changelog.version>4.0.0-beta0011</com.io7m.changelog.version>
-    <io7m.org.immutables.version>2.6.1</io7m.org.immutables.version>
-    <io7m.maven-api.version>3.5.3</io7m.maven-api.version>
+    <io7m.org.immutables.version>2.7.5</io7m.org.immutables.version>
+    <io7m.maven-api.version>3.6.0</io7m.maven-api.version>
   </properties>
 
   <inceptionYear>2017</inceptionYear>
@@ -91,7 +91,7 @@
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>2.1.1</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
@@ -131,7 +131,7 @@
       <dependency>
         <groupId>io.vavr</groupId>
         <artifactId>vavr</artifactId>
-        <version>0.9.2</version>
+        <version>0.10.0</version>
       </dependency>
       <dependency>
         <groupId>org.immutables</groupId>
@@ -156,7 +156,7 @@
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -193,7 +193,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <version>4.13-beta-3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -219,7 +219,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.5</version>
+          <version>3.6.0</version>
         </plugin>
 
         <plugin>
