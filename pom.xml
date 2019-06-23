@@ -5,8 +5,8 @@
 
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
-    <artifactId>com.io7m.primogenitor</artifactId>
-    <version>3.0.0-beta0005</version>
+    <artifactId>com.io7m.primogenitor.lite</artifactId>
+    <version>3.0.0-beta0023</version>
   </parent>
 
   <groupId>com.io7m.minisite</groupId>
