@@ -54,6 +54,7 @@
       <Bug pattern="CRLF_INJECTION_LOGS"/>
       <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
       <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
     </Or>
   </Match>
 
