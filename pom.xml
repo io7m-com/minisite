@@ -26,7 +26,7 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>2.0.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>2.0.1</io7m.api.previousVersion>
     <com.io7m.changelog.version>4.0.0-beta0014</com.io7m.changelog.version>
     <io7m.org.immutables.version>2.7.5</io7m.org.immutables.version>
     <io7m.maven-api.version>3.6.1</io7m.maven-api.version>
@@ -253,9 +253,25 @@
         <artifactId>com.io7m.minisite.maven_plugin</artifactId>
         <version>${io7m.api.previousVersion}</version>
         <inherited>false</inherited>
-        <configuration>
-          <headerFile>src/site/resources/header.xml</headerFile>
-        </configuration>
+        <executions>
+          <execution>
+            <id>minisite</id>
+            <phase>site</phase>
+            <goals>
+              <goal>generateSite</goal>
+            </goals>
+            <configuration>
+              <changelogFeedEmail>${io7m.changelog.feed_email}</changelogFeedEmail>
+              <changelogFile>README-CHANGES.xml</changelogFile>
+              <documentationFile>src/site/resources/documentation.xml</documentationFile>
+              <featuresFile>src/site/resources/features.xml</featuresFile>
+              <headerFile>src/site/resources/header.xml</headerFile>
+              <outputDirectory>${project.build.directory}/minisite</outputDirectory>
+              <overviewFile>src/site/resources/overview.xml</overviewFile>
+              <resourceDirectory>${project.basedir}/src/site/resources</resourceDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
