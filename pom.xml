@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.lite</artifactId>
-    <version>3.1.0</version>
+    <version>5.0.0</version>
   </parent>
 
   <groupId>com.io7m.minisite</groupId>
@@ -88,6 +88,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.io7m.primogenitor</groupId>
+        <artifactId>com.io7m.primogenitor.support</artifactId>
+        <version>5.0.0</version>
+      </dependency>
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
