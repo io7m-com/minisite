@@ -8,10 +8,6 @@
          <img src="https://img.shields.io/maven-central/v/com.io7m.minisite/com.io7m.minisite.png?style=flat-square"
               alt="Maven Central"/>
       </a>
-      <a href="https://www.codacy.com/app/github_79/minisite">
-         <img src="https://img.shields.io/codacy/grade/69399f7fc5124416a474e7f0635318b9.png?style=flat-square"
-              alt="Codacy"/>
-      </a>
       <a href="https://codecov.io/gh/io7m/minisite">
          <img src="https://img.shields.io/codecov/c/github/io7m/minisite.png?style=flat-square"
               alt="Codecov"/>
