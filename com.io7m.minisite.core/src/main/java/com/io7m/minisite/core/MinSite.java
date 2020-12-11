@@ -546,7 +546,7 @@ public final class MinSite
 
     {
       final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("The current release is ");
+      p.appendChild("The most recently published version of the software is ");
       final Element tt = new Element("tt", MinXHTML.XHTML);
       tt.appendChild(this.config.release());
       p.appendChild(tt);
