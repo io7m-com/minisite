@@ -27,7 +27,7 @@
 
   <properties>
     <io7m.api.previousVersion>2.0.1</io7m.api.previousVersion>
-    <com.io7m.changelog.version>4.0.0-beta0014</com.io7m.changelog.version>
+    <com.io7m.changelog.version>4.0.0</com.io7m.changelog.version>
     <io7m.org.immutables.version>2.7.5</io7m.org.immutables.version>
     <io7m.maven-api.version>3.6.1</io7m.maven-api.version>
   </properties>
@@ -132,11 +132,6 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>2.0.0-alpha0</version>
-      </dependency>
-      <dependency>
-        <groupId>io.vavr</groupId>
-        <artifactId>vavr</artifactId>
-        <version>1.0.0-alpha-3</version>
       </dependency>
       <dependency>
         <groupId>org.immutables</groupId>

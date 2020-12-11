@@ -54,10 +54,6 @@
       <groupId>com.io7m.changelog</groupId>
       <artifactId>com.io7m.changelog.xml.vanilla</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.vavr</groupId>
-      <artifactId>vavr</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
