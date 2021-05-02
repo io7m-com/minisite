@@ -14,7 +14,6 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.minisite.tests.core;
 
 import com.io7m.minisite.core.MinBugTrackerConfiguration;
@@ -22,15 +21,17 @@ import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
-import nu.xom.DocType;
-import nu.xom.Document;
-import nu.xom.Serializer;
 
-import java.io.OutputStream;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static com.io7m.minisite.tests.XHTMLValidation.validate;
 
 public final class Demo
 {
@@ -73,16 +74,26 @@ public final class Demo
     final Path directory = Paths.get("/shared-tmp");
     Files.createDirectories(directory);
 
-    final Path file_output = directory.resolve("index.xhtml");
-    try (final OutputStream output = Files.newOutputStream(file_output)) {
-      final Document doc = new Document(site.document());
-      doc.setDocType(new DocType(
-        "html",
-        "-//W3C//DTD XHTML 1.0 Strict//EN",
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"));
-      final Serializer serial = new Serializer(output, "UTF-8");
-      serial.write(doc);
-      serial.flush();
+    final var fileOutput =
+      directory.resolve("index.xhtml");
+    final var docBuilderFactory =
+      DocumentBuilderFactory.newInstance();
+    final var docBuilder =
+      docBuilderFactory.newDocumentBuilder();
+    final var document =
+      docBuilder.newDocument();
+
+    document.appendChild(site.document(document));
+
+    final var source = new DOMSource(document);
+    try (var output = Files.newBufferedWriter(fileOutput)) {
+      final var result = new StreamResult(output);
+      final var transformerFactory = TransformerFactory.newInstance();
+      final var transformer = transformerFactory.newTransformer();
+      transformer.transform(source, result);
+      output.flush();
     }
+
+    validate(fileOutput.toFile());
   }
 }

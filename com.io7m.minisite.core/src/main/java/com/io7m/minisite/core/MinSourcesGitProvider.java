@@ -16,10 +16,10 @@
 
 package com.io7m.minisite.core;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
+import com.io7m.minisite.core.internal.MinXHTML;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.net.URI;
 import java.util.Objects;
 
 /**
@@ -45,36 +45,41 @@ public final class MinSourcesGitProvider implements MinSourcesProviderType
 
   @Override
   public Element evaluate(
+    final Document document,
     final MinSourcesConfiguration configuration)
   {
     Objects.requireNonNull(configuration, "Configuration");
 
-    final Element documentation = new Element("div", MinXHTML.XHTML);
-    documentation.addAttribute(new Attribute("id", "Sources"));
-    documentation.appendChild(MinXHTML.h2("Sources"));
+    final var documentation =
+      document.createElementNS(MinXHTML.XHTML, "div");
+    documentation.setAttribute("id", "Sources");
+    documentation.appendChild(MinXHTML.h2(document, "Sources"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("This project uses ");
-      p.appendChild(MinXHTML.link("http://www.git-scm.com", "Git"));
-      p.appendChild(" to manage source code.");
+      final var p =
+        document.createElementNS(MinXHTML.XHTML, "p");
+      p.appendChild(document.createTextNode("This project uses "));
+      p.appendChild(MinXHTML.link(document, "http://www.git-scm.com", "Git"));
+      p.appendChild(document.createTextNode(" to manage source code."));
       documentation.appendChild(p);
     }
 
-    final URI configuration_uri = configuration.uri();
-    final String uri_text = configuration_uri.toString();
+    final var configuration_uri = configuration.uri();
+    final var uri_text = configuration_uri.toString();
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("Repository: ");
-      p.appendChild(MinXHTML.link(uri_text, uri_text));
+      final var p =
+        document.createElementNS(MinXHTML.XHTML, "p");
+      p.appendChild(document.createTextNode("Repository: "));
+      p.appendChild(MinXHTML.link(document, uri_text, uri_text));
       documentation.appendChild(p);
     }
 
     {
-      final Element p = new Element("pre", MinXHTML.XHTML);
-      p.appendChild("$ git clone ");
-      p.appendChild(uri_text);
+      final var p =
+        document.createElementNS(MinXHTML.XHTML, "pre");
+      p.appendChild(document.createTextNode("$ git clone "));
+      p.appendChild(document.createTextNode(uri_text));
       documentation.appendChild(p);
     }
 

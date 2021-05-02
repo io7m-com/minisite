@@ -18,5 +18,9 @@
  * Core types and functions.
  */
 
+@Export
+@Version("4.0.0")
 package com.io7m.minisite.core;
 
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

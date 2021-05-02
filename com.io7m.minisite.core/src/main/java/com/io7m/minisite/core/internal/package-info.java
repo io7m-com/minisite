@@ -14,43 +14,8 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.minisite.core;
+/**
+ * Core types and functions [Internal classes].
+ */
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
-final class MinXHTML
-{
-  static final String XHTML = "http://www.w3.org/1999/xhtml";
-
-  private MinXHTML()
-  {
-
-  }
-
-  static Element h2(
-    final String text)
-  {
-    final Element h2 = new Element("h2", XHTML);
-    h2.appendChild(text);
-    return h2;
-  }
-
-  static Element listItem(
-    final Element e)
-  {
-    final Element li = new Element("li", XHTML);
-    li.appendChild(e);
-    return li;
-  }
-
-  static Element link(
-    final String target,
-    final String text)
-  {
-    final Element a = new Element("a", XHTML);
-    a.addAttribute(new Attribute("href", target));
-    a.appendChild(text);
-    return a;
-  }
-}
+package com.io7m.minisite.core.internal;

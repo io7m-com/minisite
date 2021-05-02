@@ -27,20 +27,15 @@ import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
+import static com.io7m.minisite.tests.XHTMLValidation.validate;
 import static io.takari.maven.testing.TestResources.assertFilesNotPresent;
 import static io.takari.maven.testing.TestResources.assertFilesPresent;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -56,40 +51,29 @@ public final class MinSiteMojoTest
   @Rule
   public final ExpectedException expected = ExpectedException.none();
 
-  public static final class NoOpEntityResolver implements EntityResolver
-  {
-    public InputSource resolveEntity(
-      final String publicId,
-      final String systemId)
-    {
-      return new InputSource(
-        new ByteArrayInputStream(" ".getBytes(StandardCharsets.UTF_8)));
-    }
-  }
-
   private static String xpathOn(
     final Path url,
     final String xpath_expr)
     throws Exception
   {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    final var factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     factory.setValidating(false);
     factory.setExpandEntityReferences(false);
     factory.setFeature(
       "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
-    final DocumentBuilder builder = factory.newDocumentBuilder();
+    final var builder = factory.newDocumentBuilder();
     builder.setEntityResolver(new NoOpEntityResolver());
 
     final Document doc;
-    try (InputStream stream = Files.newInputStream(url)) {
+    try (var stream = Files.newInputStream(url)) {
       doc = builder.parse(stream);
     }
 
-    final XPathFactory xPathfactory = XPathFactory.newInstance();
-    final XPath xpath = xPathfactory.newXPath();
-    final XPathExpression expr = xpath.compile(xpath_expr);
+    final var xPathfactory = XPathFactory.newInstance();
+    final var xpath = xPathfactory.newXPath();
+    final var expr = xpath.compile(xpath_expr);
     return expr.evaluate(doc);
   }
 
@@ -97,12 +81,12 @@ public final class MinSiteMojoTest
   public void testOptionalFiles()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("optional_files");
+    final var basedir = this.resources.getBasedir("optional_files");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"features\""));
@@ -118,19 +102,21 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testOptionalFilesEmptyChanges()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir(
+    final var basedir = this.resources.getBasedir(
       "optional_files_empty_changes");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"features\""));
@@ -146,29 +132,33 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testOptionalHeader()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir(
+    final var basedir = this.resources.getBasedir(
       "optional_files_header");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"header\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testOptionalFilesMissingFeatures()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir(
+    final var basedir = this.resources.getBasedir(
       "optional_files_missing_features");
     this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
@@ -179,7 +169,7 @@ public final class MinSiteMojoTest
   public void testOptionalFilesMissingOverview()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir(
+    final var basedir = this.resources.getBasedir(
       "optional_files_missing_overview");
     this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
@@ -190,7 +180,7 @@ public final class MinSiteMojoTest
   public void testOptionalFilesMissingChanges()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir(
+    final var basedir = this.resources.getBasedir(
       "optional_files_missing_changes");
     this.expected.expect(MojoFailureException.class);
     this.expected.expectCause(instanceOf(NoSuchFileException.class));
@@ -201,12 +191,12 @@ public final class MinSiteMojoTest
   public void testLicenses()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("licenses");
+    final var basedir = this.resources.getBasedir("licenses");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"features\""));
@@ -222,18 +212,20 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testLicensesLocal()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("licenses_local");
+    final var basedir = this.resources.getBasedir("licenses_local");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"features\""));
@@ -249,18 +241,20 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "true", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testIssues()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("issues");
+    final var basedir = this.resources.getBasedir("issues");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"features\""));
@@ -276,18 +270,20 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testSCMGit()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("scm_git");
+    final var basedir = this.resources.getBasedir("scm_git");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"features\""));
@@ -303,18 +299,20 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testSCMUnknown()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("scm_unknown");
+    final var basedir = this.resources.getBasedir("scm_unknown");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesPresent(basedir, "target/minisite/minisite.css");
 
-    final Path file =
+    final var file =
       basedir.toPath().resolve("target/minisite/index.xhtml");
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"features\""));
@@ -330,15 +328,31 @@ public final class MinSiteMojoTest
       "true", xpathOn(file, "//@id=\"maven\""));
     Assert.assertEquals(
       "false", xpathOn(file, "//@id=\"license\""));
+
+    validate(basedir, "target/minisite/index.xhtml");
   }
 
   @Test
   public void testNoCSS()
     throws Exception
   {
-    final File basedir = this.resources.getBasedir("no_css");
+    final var basedir = this.resources.getBasedir("no_css");
     this.maven.executeMojo(basedir, "generateSite");
     assertFilesPresent(basedir, "target/minisite/index.xhtml");
     assertFilesNotPresent(basedir, "target/minisite/minisite.css");
+
+    validate(basedir, "target/minisite/index.xhtml");
+  }
+
+  public static final class NoOpEntityResolver implements EntityResolver
+  {
+    @Override
+    public InputSource resolveEntity(
+      final String publicId,
+      final String systemId)
+    {
+      return new InputSource(
+        new ByteArrayInputStream(" ".getBytes(StandardCharsets.UTF_8)));
+    }
   }
 }

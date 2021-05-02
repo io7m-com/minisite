@@ -16,35 +16,24 @@
 
 package com.io7m.minisite.core;
 
-import com.io7m.changelog.core.CChangelog;
-import com.io7m.changelog.parser.api.CParseErrorHandlers;
-import com.io7m.changelog.xml.api.CXHTMLChangelogWriterProviderType;
-import com.io7m.changelog.xml.api.CXHTMLChangelogWriterType;
-import com.io7m.changelog.xml.api.CXMLChangelogParserProviderType;
-import com.io7m.changelog.xml.api.CXMLChangelogParserType;
-import nu.xom.Attribute;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.ParsingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.io7m.minisite.core.internal.MinXHTMLChangelogs;
+import com.io7m.minisite.core.internal.MinXMLParse;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
+import static com.io7m.minisite.core.internal.MinXHTML.XHTML;
+import static com.io7m.minisite.core.internal.MinXHTML.h2;
+import static com.io7m.minisite.core.internal.MinXHTML.link;
+import static com.io7m.minisite.core.internal.MinXHTML.listItem;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -53,9 +42,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class MinSite
 {
-  private static final Logger LOG =
-    LoggerFactory.getLogger(MinSite.class);
-
   private final MinConfiguration config;
 
   private MinSite(
@@ -80,16 +66,17 @@ public final class MinSite
   }
 
   private static Element sources(
+    final Document document,
     final MinSourcesConfiguration sources)
   {
-    final ServiceLoader<MinSourcesProviderType> loader =
+    final var loader =
       ServiceLoader.load(MinSourcesProviderType.class);
 
-    final Iterator<MinSourcesProviderType> iter = loader.iterator();
+    final var iter = loader.iterator();
     while (iter.hasNext()) {
-      final MinSourcesProviderType provider = iter.next();
+      final var provider = iter.next();
       if (Objects.equals(provider.system(), sources.system())) {
-        return provider.evaluate(sources);
+        return provider.evaluate(document, sources);
       }
     }
 
@@ -97,117 +84,35 @@ public final class MinSite
       "No providers are available for source repositories of type: " + sources.system());
   }
 
-  private static Element changelog(
-    final MinChangesConfiguration changes_config)
-  {
-    final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
-      ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
-
-    if (!parser_provider_opt.isPresent()) {
-      throw new NoSuchElementException(
-        "No XML changelog parser providers are available");
-    }
-
-    final Optional<CXHTMLChangelogWriterProviderType> writer_provider_opt =
-      ServiceLoader.load(CXHTMLChangelogWriterProviderType.class).findFirst();
-
-    if (!writer_provider_opt.isPresent()) {
-      throw new NoSuchElementException(
-        "No XHTML changelog writer providers are available");
-    }
-
-    final CXMLChangelogParserProviderType parser_provider =
-      parser_provider_opt.get();
-
-    final Path changes_file = changes_config.file();
-    try (InputStream input = Files.newInputStream(changes_file)) {
-      final CXMLChangelogParserType parser =
-        parser_provider.create(
-          changes_file.toUri(),
-          input,
-          CParseErrorHandlers.loggingHandler(LOG));
-
-      final CChangelog changelog = parser.parse();
-
-      final Element changes = new Element("div", MinXHTML.XHTML);
-      changes.addAttribute(new Attribute("id", "changes"));
-      changes.appendChild(MinXHTML.h2("Changes"));
-
-      {
-        final Element p = new Element("p", MinXHTML.XHTML);
-        p.appendChild("Subscribe to the releases ");
-        p.appendChild(MinXHTML.link("releases.atom", "atom feed"));
-        p.appendChild(".");
-        changes.appendChild(p);
-      }
-
-      if (changelog.releases().isEmpty()) {
-        final Element p = new Element("p", MinXHTML.XHTML);
-        p.appendChild("No formal releases have been made.");
-        changes.appendChild(p);
-      } else {
-        changes.appendChild(serializeChangelog(writer_provider_opt.get(), changelog).copy());
-      }
-
-      return changes;
-    } catch (final IOException e) {
-      throw new UncheckedIOException(e);
-    } catch (final ParsingException e) {
-      throw new UncheckedIOException(new IOException(e));
-    }
-  }
-
-  private static Element serializeChangelog(
-    final CXHTMLChangelogWriterProviderType writer_provider,
-    final CChangelog changelog)
-    throws IOException, ParsingException
-  {
-    try (ByteArrayOutputStream bao = new ByteArrayOutputStream()) {
-      final CXHTMLChangelogWriterType writer =
-        writer_provider.create(URI.create("urn:stdout"), bao);
-      writer.write(changelog);
-      final Builder b = new Builder(false);
-      try (ByteArrayInputStream bai = new ByteArrayInputStream(bao.toByteArray())) {
-        final Document doc = b.build(bai);
-        return doc.getRootElement();
-      }
-    }
-  }
-
   private static Element features(
+    final Document document,
     final Path path)
   {
-    final Element features = new Element("div", MinXHTML.XHTML);
-    features.addAttribute(new Attribute("id", "features"));
-    features.appendChild(MinXHTML.h2("Features"));
-
-    {
-      final Builder b = new Builder();
-      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
-        final Document doc = b.build(stream);
-        features.appendChild(doc.getRootElement().copy());
-      } catch (final IOException e) {
-        throw new UncheckedIOException(e);
-      } catch (final ParsingException e) {
-        throw new UncheckedIOException(new IOException(e));
-      }
-    }
-
+    final var features = document.createElementNS(XHTML, "div");
+    features.setAttribute("id", "features");
+    features.appendChild(h2(document, "Features"));
+    features.appendChild(MinXMLParse.parseFileUnchecked(
+      document,
+      path.toAbsolutePath()));
     return features;
   }
 
   private static Element bugTracker(
+    final Document document,
     final MinBugTrackerConfiguration tracker)
   {
-    final Element container = new Element("div", MinXHTML.XHTML);
-    container.addAttribute(new Attribute("id", "bug-tracker"));
-    container.appendChild(MinXHTML.h2("Bug Tracker"));
+    final var container = document.createElementNS(XHTML, "div");
+    container.setAttribute("id", "bug-tracker");
+    container.appendChild(h2(document, "Bug Tracker"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("The project uses ");
-      p.appendChild(MinXHTML.link(tracker.uri().toString(), tracker.system()));
-      p.appendChild(" to track issues.");
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode("The project uses "));
+      p.appendChild(link(
+        document,
+        tracker.uri().toString(),
+        tracker.system()));
+      p.appendChild(document.createTextNode(" to track issues."));
       container.appendChild(p);
     }
 
@@ -215,18 +120,22 @@ public final class MinSite
   }
 
   private static Element license(
+    final Document document,
     final Path path)
   {
-    final Element license = new Element("div", MinXHTML.XHTML);
-    license.addAttribute(new Attribute("id", "license"));
-    license.appendChild(MinXHTML.h2("License"));
+    final var license = document.createElementNS(XHTML, "div");
+    license.setAttribute("id", "license");
+    license.appendChild(h2(document, "License"));
 
-    final Element pre = new Element("pre", MinXHTML.XHTML);
+    final var pre = document.createElementNS(XHTML, "pre");
     try {
       pre.appendChild(
-        Files.readAllLines(path, UTF_8)
-          .stream()
-          .collect(Collectors.joining(System.lineSeparator())));
+        document.createTextNode(
+          Files.readAllLines(path, UTF_8)
+            .stream()
+            .collect(Collectors.joining(System.lineSeparator()))
+        )
+      );
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -241,127 +150,130 @@ public final class MinSite
     return path.replaceAll("^[/]+", "");
   }
 
-  private static Element contentsLicenseLink()
+  private static Element contentsLicenseLink(
+    final Document document)
   {
-    return MinXHTML.link("#license", "License");
+    return link(document, "#license", "License");
   }
 
-  private static Element contentsSourcesLink()
+  private static Element contentsSourcesLink(
+    final Document document)
   {
-    return MinXHTML.link("#sources", "Sources");
+    return link(document, "#sources", "Sources");
   }
 
-  private static Element contentsChangesLink()
+  private static Element contentsChangesLink(
+    final Document document)
   {
-    return MinXHTML.link("#changes", "Changes");
+    return link(document, "#changes", "Changes");
   }
 
-  private static Element contentsDocumentationLink()
+  private static Element contentsDocumentationLink(
+    final Document document)
   {
-    return MinXHTML.link("#documentation", "Documentation");
+    return link(document, "#documentation", "Documentation");
   }
 
-  private static Element contentsReleasesLink()
+  private static Element contentsReleasesLink(
+    final Document document)
   {
-    return MinXHTML.link("#releases", "Releases");
+    return link(document, "#releases", "Releases");
   }
 
-  private static Element contentsBugTrackerLink()
+  private static Element contentsBugTrackerLink(
+    final Document document)
   {
-    return MinXHTML.link("#bug-tracker", "Bug Tracker");
+    return link(document, "#bug-tracker", "Bug Tracker");
   }
 
-  private static Element contentsFeaturesLink()
+  private static Element contentsFeaturesLink(
+    final Document document)
   {
-    return MinXHTML.link("#features", "Features");
+    return link(document, "#features", "Features");
   }
 
-  private static Element contentsMavenLink()
+  private static Element contentsMavenLink(
+    final Document document)
   {
-    return MinXHTML.link("#maven", "Maven");
+    return link(document, "#maven", "Maven");
   }
 
-  private static Element css(final String name)
+  private static Element css(
+    final Document document,
+    final String name)
   {
     Objects.requireNonNull(name, "name");
-    final Element style = new Element("link", MinXHTML.XHTML);
-    style.addAttribute(new Attribute("type", "text/css"));
-    style.addAttribute(new Attribute("rel", "stylesheet"));
-    style.addAttribute(new Attribute("href", name));
+    final var style = document.createElementNS(XHTML, "link");
+    style.setAttribute("type", "text/css");
+    style.setAttribute("rel", "stylesheet");
+    style.setAttribute("href", name);
     return style;
   }
 
-  private static Element metaGenerator()
+  private static Element metaGenerator(
+    final Document document)
   {
-    final String content =
+    final var content =
       new StringBuilder(128)
         .append("https://www.github.com/io7m/minisite; ")
         .append(version())
         .toString();
 
-    final Element meta = new Element("meta", MinXHTML.XHTML);
-    meta.addAttribute(new Attribute("name", "generator"));
-    meta.addAttribute(new Attribute("content", content));
+    final var meta = document.createElementNS(XHTML, "meta");
+    meta.setAttribute("name", "generator");
+    meta.setAttribute("content", content);
     return meta;
   }
 
-  private static Element metaType()
+  private static Element metaType(
+    final Document document)
   {
-    final Element meta = new Element("meta", MinXHTML.XHTML);
-    meta.addAttribute(
-      new Attribute("http-equiv", "Content-Type"));
-    meta.addAttribute(
-      new Attribute("content", "application/xhtml+xml; charset=UTF-8"));
+    final var meta = document.createElementNS(XHTML, "meta");
+    meta.setAttribute("http-equiv", "Content-Type");
+    meta.setAttribute("content", "application/xhtml+xml; charset=UTF-8");
     return meta;
   }
 
   private static String version()
   {
-    final String version = MinSite.class.getPackage().getImplementationVersion();
+    final var version = MinSite.class.getPackage().getImplementationVersion();
     return version == null ? "UNKNOWN" : version;
   }
 
-  private static Element header(final Path path)
+  private static Element header(
+    final Document document,
+    final Path path)
   {
-    final Element header = new Element("div", MinXHTML.XHTML);
-    header.addAttribute(new Attribute("id", "header"));
-
-    {
-      final Builder b = new Builder();
-      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
-        final Document doc = b.build(stream);
-        header.appendChild(doc.getRootElement().copy());
-      } catch (final IOException e) {
-        throw new UncheckedIOException(e);
-      } catch (final ParsingException e) {
-        throw new UncheckedIOException(new IOException(e));
-      }
-    }
-
+    final var header = document.createElementNS(XHTML, "div");
+    header.setAttribute("id", "header");
+    header.appendChild(MinXMLParse.parseFileUnchecked(
+      document,
+      path.toAbsolutePath()));
     return header;
   }
 
   private static void mavenDependency(
+    final Document document,
     final Element pre,
     final String module,
     final String group,
     final String version)
   {
-    final String link_group =
+    final var linkGroup =
       new StringBuilder(64)
         .append("http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22")
         .append(group)
         .append("%22")
         .toString();
 
-    final String link_artifact =
+    final var linkArtifact =
       new StringBuilder(64)
         .append("http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22")
         .append(module)
         .append("%22")
         .toString();
 
-    final String link_version =
+    final var linkVersion =
       new StringBuilder(64)
         .append("http://search.maven.org/#artifactdetails%7C")
         .append(group)
@@ -372,125 +284,166 @@ public final class MinSite
         .append("%7Cjar")
         .toString();
 
-    final String separator = System.lineSeparator();
+    final var separator = System.lineSeparator();
     pre.appendChild(
-      new StringBuilder(64)
-        .append("<dependency>")
-        .append(separator)
-        .append("  <groupId>")
-        .toString());
+      document.createTextNode(
+        new StringBuilder(64)
+          .append("<dependency>")
+          .append(separator)
+          .append("  <groupId>")
+          .toString())
+    );
 
-    pre.appendChild(MinXHTML.link(link_group, group));
-
-    pre.appendChild(
-      new StringBuilder(64)
-        .append("</groupId>")
-        .append(separator)
-        .append("  <artifactId>")
-        .toString());
-
-    pre.appendChild(MinXHTML.link(link_artifact, module));
+    pre.appendChild(link(document, linkGroup, group));
 
     pre.appendChild(
-      new StringBuilder(64)
-        .append("</artifactId>")
-        .append(separator)
-        .append("  <version>")
-        .toString());
+      document.createTextNode(
+        new StringBuilder(64)
+          .append("</groupId>")
+          .append(separator)
+          .append("  <artifactId>")
+          .toString())
+    );
 
-    pre.appendChild(MinXHTML.link(link_version, version));
+    pre.appendChild(link(document, linkArtifact, module));
 
     pre.appendChild(
-      new StringBuilder(64)
-        .append("</version>")
-        .append(separator)
-        .append("</dependency>")
-        .append(separator)
-        .append(separator)
-        .toString());
+      document.createTextNode(
+        new StringBuilder(64)
+          .append("</artifactId>")
+          .append(separator)
+          .append("  <version>")
+          .toString())
+    );
+
+    pre.appendChild(link(document, linkVersion, version));
+
+    pre.appendChild(
+      document.createTextNode(
+        new StringBuilder(64)
+          .append("</version>")
+          .append(separator)
+          .append("</dependency>")
+          .append(separator)
+          .append(separator)
+          .toString())
+    );
   }
 
   /**
    * Generate a site.
    *
+   * @param document The document that will own the generated elements
+   *
    * @return A generated page
    */
 
-  public Element document()
+  public Element document(
+    final Document document)
   {
-    final Element head = this.head();
-    final Element body = this.body();
+    final var head = this.head(document);
+    final var body = this.body(document);
 
-    final Element xhtml = new Element("html", MinXHTML.XHTML);
+    final var xhtml = document.createElementNS(XHTML, "html");
     xhtml.appendChild(head);
     xhtml.appendChild(body);
     return xhtml;
   }
 
-  private Element body()
+  private Element body(
+    final Document document)
   {
-    final Element body = new Element("body", MinXHTML.XHTML);
-    final Element main = this.main();
+    final var body = document.createElementNS(XHTML, "body");
+    final var main = this.main(document);
 
     body.appendChild(main);
     return body;
   }
 
-  private Element main()
+  private Element main(
+    final Document document)
   {
-    final Element main = new Element("div", MinXHTML.XHTML);
-    main.addAttribute(new Attribute("id", "main"));
+    final var main = document.createElementNS(XHTML, "div");
+    main.setAttribute("id", "main");
 
-    this.config.header().ifPresent(path -> main.appendChild(header(path)));
+    this.config.header()
+      .ifPresent(path -> {
+        main.appendChild(header(document, path));
+      });
 
-    main.appendChild(this.overview());
-    main.appendChild(this.contents());
+    main.appendChild(this.overview(document));
+    main.appendChild(this.contents(document));
 
-    this.config.features().ifPresent(path -> main.appendChild(features(path)));
+    this.config.features()
+      .ifPresent(path -> {
+        main.appendChild(features(document, path));
+      });
 
-    main.appendChild(this.releases());
+    main.appendChild(this.releases(document));
 
-    this.config.documentation().ifPresent(path -> main.appendChild(this.documentation(path)));
+    this.config.documentation()
+      .ifPresent(path -> {
+        main.appendChild(this.documentation(document, path));
+      });
 
-    main.appendChild(this.maven());
+    main.appendChild(this.maven(document));
 
-    this.config.changelog().ifPresent(changelog -> main.appendChild(changelog(changelog)));
-    this.config.sources().ifPresent(sources -> main.appendChild(sources(sources)));
-    this.config.license().ifPresent(path -> main.appendChild(license(path)));
-    this.config.bugTracker().ifPresent(tracker -> main.appendChild(bugTracker(tracker)));
+    this.config.changelog()
+      .ifPresent(changelog -> {
+        main.appendChild(MinXHTMLChangelogs.changelog(document, changelog));
+      });
+
+    this.config.sources()
+      .ifPresent(sources -> {
+        main.appendChild(sources(document, sources));
+      });
+
+    this.config.license()
+      .ifPresent(path -> {
+        main.appendChild(license(document, path));
+      });
+
+    this.config.bugTracker()
+      .ifPresent(tracker -> {
+        main.appendChild(bugTracker(document, tracker));
+      });
 
     return main;
   }
 
-  private Element maven()
+  private Element maven(
+    final Document document)
   {
-    final Element maven = new Element("div", MinXHTML.XHTML);
-    maven.addAttribute(new Attribute("id", "maven"));
-    maven.appendChild(MinXHTML.h2("Maven"));
+    final var maven = document.createElementNS(XHTML, "div");
+    maven.setAttribute("id", "maven");
+    maven.appendChild(h2(document, "Maven"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild(
-        "The following is a complete list of the project's modules expressed as Maven dependencies: ");
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode(
+        "The following is a complete list of the project's modules expressed as Maven dependencies: "
+      ));
       maven.appendChild(p);
     }
 
     {
-      final Element pre = new Element("pre", MinXHTML.XHTML);
-      final String group = this.config.projectGroupName();
-      final String version = this.config.release();
-      mavenDependency(pre, this.config.projectName(), group, version);
-      for (final String module : this.config.projectModules()) {
-        mavenDependency(pre, module, group, version);
+      final var pre = document.createElementNS(XHTML, "pre");
+      final var group = this.config.projectGroupName();
+      final var version = this.config.release();
+      mavenDependency(document, pre, this.config.projectName(), group, version);
+      for (final var module : this.config.projectModules()) {
+        mavenDependency(document, pre, module, group, version);
       }
       maven.appendChild(pre);
     }
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("Each release of the project is made available on ");
-      p.appendChild(MinXHTML.link("http://search.maven.org", "Maven Central"));
-      p.appendChild(" within ten minutes of the release announcement.");
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode(
+        "Each release of the project is made available on "));
+      p.appendChild(link(document, "http://search.maven.org", "Maven Central"));
+      p.appendChild(document.createTextNode(
+        " within ten minutes of the release announcement."));
       maven.appendChild(p);
     }
 
@@ -498,67 +451,63 @@ public final class MinSite
   }
 
   private Element documentation(
+    final Document document,
     final Path path)
   {
-    final Element documentation = new Element("div", MinXHTML.XHTML);
-    documentation.addAttribute(new Attribute("id", "documentation"));
-    documentation.appendChild(MinXHTML.h2("Documentation"));
+    final var documentation =
+      document.createElementNS(XHTML, "div");
+    documentation.setAttribute("id", "documentation");
+    documentation.appendChild(h2(document, "Documentation"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("Documentation for the ");
-      final Element tt = new Element("tt", MinXHTML.XHTML);
-      tt.appendChild(this.config.release());
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode("Documentation for the "));
+      final var tt = document.createElementNS(XHTML, "tt");
+      tt.appendChild(document.createTextNode(this.config.release()));
       p.appendChild(tt);
-      p.appendChild(" release is available for reading online.");
+      p.appendChild(document.createTextNode(
+        " release is available for reading online."));
       documentation.appendChild(p);
     }
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
+      final var p = document.createElementNS(XHTML, "p");
       p.appendChild(
-        "Documentation for current and older releases is archived in the ");
-      p.appendChild(MinXHTML.link(this.centralRepos(), "repository"));
-      p.appendChild(".");
+        document.createTextNode(
+          "Documentation for current and older releases is archived in the "));
+      p.appendChild(link(document, this.centralRepos(), "repository"));
+      p.appendChild(document.createTextNode("."));
       documentation.appendChild(p);
     }
 
-    {
-      final Builder b = new Builder();
-      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
-        final Document doc = b.build(stream);
-        documentation.appendChild(doc.getRootElement().copy());
-      } catch (final IOException e) {
-        throw new UncheckedIOException(e);
-      } catch (final ParsingException e) {
-        throw new UncheckedIOException(new IOException(e));
-      }
-    }
-
+    documentation.appendChild(MinXMLParse.parseFileUnchecked(document, path));
     return documentation;
   }
 
-  private Element releases()
+  private Element releases(
+    final Document document)
   {
-    final Element releases = new Element("div", MinXHTML.XHTML);
-    releases.addAttribute(new Attribute("id", "releases"));
-    releases.appendChild(MinXHTML.h2("Releases"));
+    final var releases = document.createElementNS(XHTML, "div");
+    releases.setAttribute("id", "releases");
+    releases.appendChild(h2(document, "Releases"));
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("The most recently published version of the software is ");
-      final Element tt = new Element("tt", MinXHTML.XHTML);
-      tt.appendChild(this.config.release());
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode(
+        "The most recently published version of the software is "));
+      final var tt = document.createElementNS(XHTML, "tt");
+      tt.appendChild(document.createTextNode(this.config.release()));
       p.appendChild(tt);
-      p.appendChild(".");
+      p.appendChild(document.createTextNode("."));
       releases.appendChild(p);
     }
 
     {
-      final Element p = new Element("p", MinXHTML.XHTML);
-      p.appendChild("Source code and binaries are available from the ");
-      p.appendChild(MinXHTML.link(this.centralRepos(), "repository"));
-      p.appendChild(".");
+      final var p = document.createElementNS(XHTML, "p");
+      p.appendChild(document.createTextNode(
+        "Source code and binaries are available from the "));
+      p.appendChild(link(document, this.centralRepos(), "repository"));
+      p.appendChild(document.createTextNode("."));
       releases.appendChild(p);
     }
 
@@ -573,90 +522,112 @@ public final class MinSite
       .toString();
   }
 
-  private Element overview()
+  private Element overview(
+    final Document document)
   {
-    final Element overview = new Element("div", MinXHTML.XHTML);
-    overview.addAttribute(new Attribute("id", "overview"));
-    overview.appendChild(this.overviewTitleArea());
-    overview.appendChild(this.overviewContentArea());
+    final var overview = document.createElementNS(XHTML, "div");
+    overview.setAttribute("id", "overview");
+    overview.appendChild(this.overviewTitleArea(document));
+    overview.appendChild(this.overviewContentArea(document));
     return overview;
   }
 
-  private Element overviewTitleArea()
+  private Element overviewTitleArea(
+    final Document document)
   {
-    final Element area = new Element("div", MinXHTML.XHTML);
-    area.addAttribute(new Attribute("class", "overview_title_area"));
+    final var area = document.createElementNS(XHTML, "div");
+    area.setAttribute("class", "overview_title_area");
 
-    final Element img = new Element("img", MinXHTML.XHTML);
-    img.addAttribute(new Attribute("src", "icon.png"));
-    img.addAttribute(new Attribute("width", "64"));
-    img.addAttribute(new Attribute("height", "64"));
-    img.addAttribute(new Attribute("class", "icon"));
-    img.addAttribute(new Attribute("alt", "Project icon"));
+    final var img = document.createElementNS(XHTML, "img");
+    img.setAttribute("src", "icon.png");
+    img.setAttribute("width", "64");
+    img.setAttribute("height", "64");
+    img.setAttribute("class", "icon");
+    img.setAttribute("alt", "Project icon");
 
-    final Element title = new Element("h1", MinXHTML.XHTML);
-    title.appendChild(this.config.projectName());
+    final var title = document.createElementNS(XHTML, "h1");
+    title.appendChild(document.createTextNode(this.config.projectName()));
 
     area.appendChild(img);
     area.appendChild(title);
     return area;
   }
 
-  private Element overviewContentArea()
+  private Element overviewContentArea(
+    final Document document)
   {
-    final Element area = new Element("div", MinXHTML.XHTML);
-    area.addAttribute(new Attribute("class", "overview_content_area"));
+    final var area = document.createElementNS(XHTML, "div");
+    area.setAttribute("class", "overview_content_area");
 
     this.config.overview().ifPresent(path -> {
-      final Builder b = new Builder();
-      try (InputStream stream = Files.newInputStream(path.toAbsolutePath())) {
-        final Document doc = b.build(stream);
-        area.appendChild(doc.getRootElement().copy());
-      } catch (final IOException e) {
-        throw new UncheckedIOException(e);
-      } catch (final ParsingException e) {
-        throw new UncheckedIOException(new IOException(e));
-      }
+      area.appendChild(MinXMLParse.parseFileUnchecked(document, path));
     });
 
     return area;
   }
 
-  private Element contents()
+  private Element contents(
+    final Document document)
   {
-    final Element area = new Element("div", MinXHTML.XHTML);
-    area.appendChild(MinXHTML.h2("Contents"));
+    final var area = document.createElementNS(XHTML, "div");
+    area.appendChild(h2(document, "Contents"));
 
-    final Element contents = new Element("ul", MinXHTML.XHTML);
+    final var contents = document.createElementNS(XHTML, "ul");
 
     this.config.features().ifPresent(
-      path -> contents.appendChild(MinXHTML.listItem(contentsFeaturesLink())));
-    contents.appendChild(MinXHTML.listItem(contentsReleasesLink()));
+      path -> contents.appendChild(listItem(
+        document,
+        contentsFeaturesLink(document))));
+
+    contents.appendChild(listItem(
+      document,
+      contentsReleasesLink(document)));
+
     this.config.documentation().ifPresent(
-      path -> contents.appendChild(MinXHTML.listItem(contentsDocumentationLink())));
-    contents.appendChild(MinXHTML.listItem(contentsMavenLink()));
+      path -> contents.appendChild(listItem(
+        document,
+        contentsDocumentationLink(document))));
+
+    contents.appendChild(listItem(
+      document,
+      contentsMavenLink(document)));
+
     this.config.changelog().ifPresent(
-      path -> contents.appendChild(MinXHTML.listItem(contentsChangesLink())));
+      path -> contents.appendChild(listItem(
+        document,
+        contentsChangesLink(document))));
+
     this.config.sources().ifPresent(
-      sources -> contents.appendChild(MinXHTML.listItem(contentsSourcesLink())));
+      sources -> contents.appendChild(listItem(
+        document,
+        contentsSourcesLink(document))));
+
     this.config.license().ifPresent(
-      path -> contents.appendChild(MinXHTML.listItem(contentsLicenseLink())));
+      path -> contents.appendChild(listItem(
+        document,
+        contentsLicenseLink(document))));
+
     this.config.bugTracker().ifPresent(
-      path -> contents.appendChild(MinXHTML.listItem(contentsBugTrackerLink())));
+      path -> contents.appendChild(listItem(
+        document,
+        contentsBugTrackerLink(document))));
 
     area.appendChild(contents);
     return area;
   }
 
-  private Element head()
+  private Element head(
+    final Document document)
   {
-    final Element head = new Element("head", MinXHTML.XHTML);
-    final Element title = new Element("title", MinXHTML.XHTML);
-    title.appendChild(this.config.projectName());
+    final var head = document.createElementNS(XHTML, "head");
+    final var title = document.createElementNS(XHTML, "title");
+    title.appendChild(document.createTextNode(this.config.projectName()));
 
-    head.appendChild(metaGenerator());
-    head.appendChild(metaType());
-    this.config.cssIncludes().forEach(name -> head.appendChild(css(name)));
+    head.appendChild(metaGenerator(document));
+    head.appendChild(metaType(document));
+    this.config.cssIncludes()
+      .forEach(name -> head.appendChild(css(document, name)));
+
     head.appendChild(title);
     return head;
   }

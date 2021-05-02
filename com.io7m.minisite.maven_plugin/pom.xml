@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>com.io7m.minisite.maven_plugin</artifactId>
@@ -34,24 +34,7 @@
       <groupId>com.io7m.jlexing</groupId>
       <artifactId>com.io7m.jlexing.core</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.io7m.xom</groupId>
-      <artifactId>xom</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xalan</groupId>
-          <artifactId>xalan</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+
     <dependency>
       <groupId>com.io7m.changelog</groupId>
       <artifactId>com.io7m.changelog.core</artifactId>
@@ -94,12 +77,6 @@
 
   <build>
     <plugins>
-      <!-- Check style -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-
       <!-- Generate sources -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
