@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,32 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.minisite.core;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 /**
- * The type of providers for source sections.
+ * Documentation.
  */
 
-public interface MinSourcesProviderType
+module com.io7m.minisite.documentation
 {
-  /**
-   * @return The type of SCM used
-   */
+  requires com.io7m.minisite.core;
 
-  String system();
-
-  /**
-   * @param document      The document
-   * @param configuration The source configuration
-   *
-   * @return Evaluate the source section
-   */
-
-  Element evaluate(
-    Document document,
-    MinSourcesConfiguration configuration
-  );
+  exports com.io7m.minisite.documentation;
 }

@@ -16,23 +16,15 @@
 
 package com.io7m.minisite.maven_plugin;
 
-import com.io7m.changelog.core.CChangelog;
 import com.io7m.changelog.xml.api.CAtomChangelogWriterConfiguration;
 import com.io7m.changelog.xml.api.CAtomChangelogWriterProviderType;
-import com.io7m.changelog.xml.api.CAtomChangelogWriterType;
 import com.io7m.changelog.xml.api.CXMLChangelogParserProviderType;
-import com.io7m.changelog.xml.api.CXMLChangelogParserType;
 import com.io7m.minisite.core.MinBugTrackerConfiguration;
 import com.io7m.minisite.core.MinChangesConfiguration;
 import com.io7m.minisite.core.MinConfiguration;
 import com.io7m.minisite.core.MinSite;
 import com.io7m.minisite.core.MinSourcesConfiguration;
-import nu.xom.DocType;
-import nu.xom.Document;
-import nu.xom.Serializer;
-import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.License;
-import org.apache.maven.model.Scm;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -42,17 +34,18 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -228,10 +221,10 @@ public final class MinSiteMojo extends AbstractMojo
       return;
     }
 
-    final Log log = this.getLog();
+    final var log = this.getLog();
     log.debug("Generating site...");
 
-    final MinConfiguration config =
+    final var config =
       MinConfiguration.builder()
         .setProjectName(this.project.getName())
         .setProjectGroupName(this.project.getGroupId())
@@ -250,24 +243,31 @@ public final class MinSiteMojo extends AbstractMojo
         .setCentralReposPath(this.project.getGroupId().replace(".", "/"))
         .build();
 
-    final MinSite site = MinSite.create(config);
-    final Path directory = Paths.get(this.outputDirectory);
+    final var site = MinSite.create(config);
+    final var directory = Paths.get(this.outputDirectory);
 
     try {
       Files.createDirectories(directory);
 
-      final Path file_output = directory.resolve("index.xhtml");
-      try (final OutputStream output = Files.newOutputStream(file_output)) {
-        final Document doc = new Document(site.document());
-        doc.setDocType(new DocType(
-          "html",
-          "-//W3C//DTD XHTML 1.0 Strict//EN",
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"));
-        final Serializer serial = new Serializer(output, "UTF-8");
-        serial.write(doc);
-        serial.flush();
-      }
+      final var fileOutput =
+        directory.resolve("index.xhtml");
+      final var docBuilderFactory =
+        DocumentBuilderFactory.newInstance();
+      final var docBuilder =
+        docBuilderFactory.newDocumentBuilder();
+      final var document =
+        docBuilder.newDocument();
 
+      document.appendChild(site.document(document));
+
+      final var source = new DOMSource(document);
+      try (var output = Files.newBufferedWriter(fileOutput)) {
+        final var result = new StreamResult(output);
+        final var transformerFactory = TransformerFactory.newInstance();
+        final var transformer = transformerFactory.newTransformer();
+        transformer.transform(source, result);
+        output.flush();
+      }
     } catch (final UncheckedIOException e) {
       throw new MojoFailureException(e.getCause().getMessage(), e.getCause());
     } catch (final Exception e) {
@@ -276,9 +276,9 @@ public final class MinSiteMojo extends AbstractMojo
 
     try {
       if (config.cssGenerateStyle()) {
-        final Path file_output = directory.resolve("minisite.css");
-        try (final OutputStream out = Files.newOutputStream(file_output)) {
-          try (final InputStream in =
+        final var file_output = directory.resolve("minisite.css");
+        try (final var out = Files.newOutputStream(file_output)) {
+          try (final var in =
                  MinSite.class.getResourceAsStream("minisite.css")) {
             in.transferTo(out);
           }
@@ -292,7 +292,7 @@ public final class MinSiteMojo extends AbstractMojo
 
     try {
       config.changelog().ifPresent(changes_config -> {
-        final Optional<CXMLChangelogParserProviderType> parser_provider_opt =
+        final var parser_provider_opt =
           ServiceLoader.load(CXMLChangelogParserProviderType.class).findFirst();
 
         if (!parser_provider_opt.isPresent()) {
@@ -300,7 +300,7 @@ public final class MinSiteMojo extends AbstractMojo
             "No XML changelog parser providers are available");
         }
 
-        final Optional<CAtomChangelogWriterProviderType> writer_provider_opt =
+        final var writer_provider_opt =
           ServiceLoader.load(CAtomChangelogWriterProviderType.class).findFirst();
 
         if (!writer_provider_opt.isPresent()) {
@@ -308,23 +308,23 @@ public final class MinSiteMojo extends AbstractMojo
             "No Atom changelog writer providers are available");
         }
 
-        final CXMLChangelogParserProviderType parser_provider =
+        final var parser_provider =
           parser_provider_opt.get();
-        final CAtomChangelogWriterProviderType writer_provider =
+        final var writer_provider =
           writer_provider_opt.get();
 
-        try (final InputStream input =
+        try (final var input =
                Files.newInputStream(changes_config.file())) {
 
-          final CXMLChangelogParserType parser =
+          final var parser =
             parser_provider.create(
               changes_config.file().toUri(),
               input,
               ErrorHandlers.loggingHandler(log));
 
-          final CChangelog changelog = parser.parse();
+          final var changelog = parser.parse();
 
-          final CAtomChangelogWriterConfiguration meta =
+          final var meta =
             CAtomChangelogWriterConfiguration.builder()
               .setAuthorEmail(changes_config.feedEmail())
               .setAuthorName("minisite")
@@ -333,9 +333,9 @@ public final class MinSiteMojo extends AbstractMojo
               .setUri(URI.create(this.project.getUrl() + "/releases.atom"))
               .build();
 
-          final Path releases = directory.resolve("releases.atom");
-          try (final OutputStream output = Files.newOutputStream(releases)) {
-            final CAtomChangelogWriterType writer =
+          final var releases = directory.resolve("releases.atom");
+          try (final var output = Files.newOutputStream(releases)) {
+            final var writer =
               writer_provider.createWithConfiguration(
                 meta,
                 changes_config.file().toUri(),
@@ -423,18 +423,18 @@ public final class MinSiteMojo extends AbstractMojo
   {
     return this.project.getLicenses().stream().findFirst().map(license -> {
       try {
-        final URL url = this.transformURIToPath(license);
+        final var url = this.transformURIToPath(license);
 
-        final Proxy net_proxy = configureProxyForURL(log, this.settings, url);
-        final Path path = Files.createTempFile("minisite-", ".txt");
-        try (final OutputStream out = Files.newOutputStream(path)) {
-          final URLConnection conn = url.openConnection(net_proxy);
+        final var net_proxy = configureProxyForURL(log, this.settings, url);
+        final var path = Files.createTempFile("minisite-", ".txt");
+        try (final var out = Files.newOutputStream(path)) {
+          final var conn = url.openConnection(net_proxy);
           conn.connect();
 
-          try (final InputStream input = conn.getInputStream()) {
-            final byte[] buffer = new byte[1024];
+          try (final var input = conn.getInputStream()) {
+            final var buffer = new byte[1024];
             while (true) {
-              final int r = input.read(buffer);
+              final var r = input.read(buffer);
               if (r <= 0) {
                 break;
               }
@@ -454,8 +454,8 @@ public final class MinSiteMojo extends AbstractMojo
     final Settings settings,
     final URL url)
   {
-    final String target_protocol = url.getProtocol();
-    for (final org.apache.maven.settings.Proxy maven_proxy : settings.getProxies()) {
+    final var target_protocol = url.getProtocol();
+    for (final var maven_proxy : settings.getProxies()) {
 
       /*
        * Ignore inactive proxies.
@@ -474,7 +474,7 @@ public final class MinSiteMojo extends AbstractMojo
        * Try to find a proxy with the right protocol.
        */
 
-      final String proxy_protocol = maven_proxy.getProtocol();
+      final var proxy_protocol = maven_proxy.getProtocol();
       if (!Objects.equals(proxy_protocol, target_protocol)) {
         log.debug(new StringBuilder(32)
                     .append("proxy ")
@@ -519,12 +519,12 @@ public final class MinSiteMojo extends AbstractMojo
     final License license)
     throws MalformedURLException
   {
-    final Log log = this.getLog();
-    final URI uri = URI.create(license.getUrl());
+    final var log = this.getLog();
+    final var uri = URI.create(license.getUrl());
     if (uri.getScheme() == null && uri.getPath() != null) {
       log.debug(
         "License URI has no scheme and no path; transforming to local file path");
-      final String result =
+      final var result =
         "file:///" + new File(this.project.getBasedir(), uri.getPath());
       log.debug("License URL: " + result);
       return new URL(result);
@@ -534,7 +534,7 @@ public final class MinSiteMojo extends AbstractMojo
 
   private Optional<MinBugTrackerConfiguration> bugTracker()
   {
-    final IssueManagement issues = this.project.getIssueManagement();
+    final var issues = this.project.getIssueManagement();
     if (issues != null) {
       return Optional.of(
         MinBugTrackerConfiguration.builder()
@@ -548,10 +548,10 @@ public final class MinSiteMojo extends AbstractMojo
 
   private Optional<MinSourcesConfiguration> sources()
   {
-    final Log log = this.getLog();
-    final Scm scm = this.project.getScm();
+    final var log = this.getLog();
+    final var scm = this.project.getScm();
     if (scm != null) {
-      final String connection = scm.getConnection();
+      final var connection = scm.getConnection();
       if (connection.startsWith("scm:git")) {
         return Optional.of(
           MinSourcesConfiguration.of(

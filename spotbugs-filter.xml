@@ -44,18 +44,25 @@
   </Match>
 
   <Match>
+    <Class name="com.io7m.minisite.core.internal.MinXHTMLChangelogs"/>
+    <Method name="changelog"/>
+    <Bug pattern="ODN_ORPHANED_DOM_NODE"/>
+  </Match>
+
+  <Match>
     <Method name="checkPreconditions"/>
     <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
   </Match>
 
   <Match>
     <Or>
-      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
-      <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
       <Bug pattern="CRLF_INJECTION_LOGS"/>
-      <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
+      <Bug pattern="DRE_DECLARED_RUNTIME_EXCEPTION"/>
       <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+      <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
       <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+      <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
     </Or>
   </Match>
 
