@@ -34,10 +34,10 @@
         <c:change date="2020-12-11T00:00:00+00:00" summary="Use changelog 4.0.0"/>
       </c:changes>
     </c:release>
-    <c:release date="2021-05-02T18:29:09+00:00" is-open="true" ticket-system="com.io7m.github.minisite" version="4.0.0">
+    <c:release date="2021-05-02T18:55:17+00:00" is-open="false" ticket-system="com.io7m.github.minisite" version="4.0.0">
       <c:changes>
         <c:change date="2021-05-02T00:00:00+00:00" summary="Remove xom as a dependency"/>
-        <c:change date="2021-05-02T18:29:09+00:00" summary="Modularize the API"/>
+        <c:change date="2021-05-02T00:00:00+00:00" summary="Modularize the API"/>
       </c:changes>
     </c:release>
   </c:releases>
