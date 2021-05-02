@@ -31,6 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.io7m.minisite.tests.XHTMLValidation.validate;
+
 public final class Demo
 {
   private Demo()
@@ -91,5 +93,7 @@ public final class Demo
       transformer.transform(source, result);
       output.flush();
     }
+
+    validate(fileOutput.toFile());
   }
 }
