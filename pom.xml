@@ -29,17 +29,17 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>4.0.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>5.0.0-beta0001</io7m.api.previousVersion>
     <com.io7m.changelog.version>4.1.0</com.io7m.changelog.version>
-    <io7m.org.immutables.version>2.7.5</io7m.org.immutables.version>
-    <io7m.maven-api.version>3.8.3</io7m.maven-api.version>
+    <io7m.org.immutables.version>2.9.3</io7m.org.immutables.version>
+    <io7m.maven-api.version>3.8.6</io7m.maven-api.version>
   </properties>
 
   <inceptionYear>2017</inceptionYear>
 
   <licenses>
     <license>
-      <name>ISC License</name>
+      <name>ISC</name>
       <url>http://io7m.com/license/isc.txt</url>
     </license>
   </licenses>
@@ -124,7 +124,7 @@
       <dependency>
         <groupId>com.io7m.jlexing</groupId>
         <artifactId>com.io7m.jlexing.core</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
@@ -139,12 +139,12 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.5</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.6</version>
       </dependency>
       <dependency>
         <groupId>org.immutables</groupId>
@@ -164,7 +164,7 @@
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.6.4</version>
+        <version>3.7.0</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -196,7 +196,7 @@
       <dependency>
         <groupId>io.takari.maven.plugins</groupId>
         <artifactId>takari-plugin-testing</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
