@@ -32,7 +32,7 @@
     <com.io7m.changelog.version>4.1.0</com.io7m.changelog.version>
     <io7m.api.previousVersion>5.0.0-beta0001</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
-    <io7m.maven-api.version>3.8.6</io7m.maven-api.version>
+    <io7m.maven-api.version>3.9.6</io7m.maven-api.version>
     <io7m.org.immutables.version>2.9.3</io7m.org.immutables.version>
   </properties>
 
