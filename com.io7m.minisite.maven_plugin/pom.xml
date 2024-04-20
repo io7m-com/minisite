@@ -17,7 +17,7 @@
 
   <name>com.io7m.minisite.maven_plugin</name>
   <description>Tiny site generator for Maven projects (Maven plugin)</description>
-  <url>http://io7m.github.io/minisite/</url>
+  <url>https://www.io7m.com/software/minisite/</url>
 
   <dependencies>
     <dependency>
@@ -83,11 +83,14 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <executions>
           <execution>
-            <id>mojo-descriptor</id>
+            <id>default-descriptor</id>
             <phase>process-classes</phase>
             <goals>
               <goal>descriptor</goal>
             </goals>
+            <configuration>
+              <goalPrefix>minisite</goalPrefix>
+            </configuration>
           </execution>
         </executions>
       </plugin>
