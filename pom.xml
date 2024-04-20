@@ -30,7 +30,7 @@
 
   <properties>
     <!-- Configuration. -->
-    <io7m.api.previousVersion>5.0.0-SNAPSHOT</io7m.api.previousVersion>
+    <io7m.api.previousVersion>4.0.0</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
     <com.io7m.changelog.version>4.1.0</com.io7m.changelog.version>
