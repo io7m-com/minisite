@@ -60,12 +60,12 @@ public final class Demo
         .setSources(
           MinSourcesConfiguration.builder()
             .setSystem("Git")
-            .setUri(URI.create("https://github.com/io7m/r2"))
+            .setUri(URI.create("https://www.github.com/io7m-com/r2"))
             .build())
         .setBugTracker(
           MinBugTrackerConfiguration.builder()
             .setSystem("GitHub Issues")
-            .setUri(URI.create("https://github.com/io7m/r2/issues"))
+            .setUri(URI.create("https://www.github.com/io7m-com/r2/issues"))
             .build())
         .build();
 

@@ -60,6 +60,6 @@
     </c:release>
   </c:releases>
   <c:ticket-systems>
-    <c:ticket-system default="true" id="com.io7m.github.minisite" url="https://github.com/io7m/minisite/issues/"/>
+    <c:ticket-system default="true" id="com.io7m.github.minisite" url="https://www.github.com/io7m-com/minisite/issues/"/>
   </c:ticket-systems>
 </c:changelog>

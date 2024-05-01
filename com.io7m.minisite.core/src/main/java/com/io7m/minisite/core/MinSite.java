@@ -215,7 +215,7 @@ public final class MinSite
   {
     final var content =
       new StringBuilder(128)
-        .append("https://www.github.com/io7m/minisite; ")
+        .append("https://www.github.com/io7m-com/minisite; ")
         .append(version())
         .toString();
 

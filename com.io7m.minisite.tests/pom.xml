@@ -20,7 +20,10 @@
   <url>https://www.io7m.com/software/minisite/</url>
 
   <properties>
+    <bnd.baseline.skip>true</bnd.baseline.skip>
+    <checkstyle.skip>true</checkstyle.skip>
     <mdep.analyze.skip>true</mdep.analyze.skip>
+    <spotbugs.skip>true</spotbugs.skip>
   </properties>
 
   <dependencies>
@@ -64,12 +67,10 @@
     <dependency>
       <groupId>io.takari.maven.plugins</groupId>
       <artifactId>takari-plugin-testing</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

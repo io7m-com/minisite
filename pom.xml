@@ -19,7 +19,7 @@
 
   <name>com.io7m.minisite</name>
   <description>Tiny site generator for Maven projects</description>
-  <url>https://www.github.com/io7m/minisite</url>
+  <url>https://www.github.com/io7m-com/minisite</url>
 
   <modules>
     <module>com.io7m.minisite.core</module>
@@ -48,9 +48,9 @@
   </licenses>
 
   <scm>
-    <url>https://www.github.com/io7m/minisite</url>
-    <connection>scm:git:https://www.github.com/io7m/minisite</connection>
-    <developerConnection>scm:git:https://www.github.com/io7m/minisite</developerConnection>
+    <url>https://www.github.com/io7m-com/minisite</url>
+    <connection>scm:git:https://www.github.com/io7m-com/minisite</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/minisite</developerConnection>
   </scm>
 
   <developers>
@@ -63,7 +63,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://www.github.com/io7m/minisite/issues</url>
+    <url>https://www.github.com/io7m-com/minisite/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -85,7 +85,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://www.github.com/minisite/actions</url>
+    <url>https://www.github.com/io7m-com/minisite/actions</url>
   </ciManagement>
 
   <prerequisites>
