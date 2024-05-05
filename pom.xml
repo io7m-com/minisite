@@ -24,7 +24,6 @@
   <modules>
     <module>com.io7m.minisite.core</module>
     <module>com.io7m.minisite.tests</module>
-    <module>com.io7m.minisite.documentation</module>
     <module>com.io7m.minisite.maven_plugin</module>
   </modules>
 
