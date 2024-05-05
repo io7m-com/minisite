@@ -111,7 +111,7 @@ file that will be inserted into the header section of the generated site
 "(" above the logo and title ")".
 
 The `changelogFile` parameter specifies an XML
-changelog in [link-ext [target "http://io7m.github.io/changelog"] changelog]
+changelog in [changelog](https://www.io7m.com/software/changelog)
 format that will be converted into XHTML for the generated site. If no
 file is specified, no `changes` section will be generated.
 
