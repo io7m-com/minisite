@@ -99,11 +99,11 @@ to set `inherited` to `false` as
 shown so that the plugin won't execute for any child modules.
 
 The `overviewFile` parameter specifies an XHTML
-file that will be inserted into the [term [type term] overview] section of
+file that will be inserted into the `overview` section of
 the generated site.
 
 The `featuresFile` parameter specifies an XHTML
-file that will be inserted into the [term [type term] features] section of
+file that will be inserted into the `features` section of
 the generated site.
 
 The `headerFile` parameter specifies an XHTML
@@ -113,7 +113,7 @@ file that will be inserted into the header section of the generated site
 The `changelogFile` parameter specifies an XML
 changelog in [link-ext [target "http://io7m.github.io/changelog"] changelog]
 format that will be converted into XHTML for the generated site. If no
-file is specified, no [term [type term] changes] section will be generated.
+file is specified, no `changes` section will be generated.
 
 The `changelogFeedEmail` parameter the email address
 that will be used when generating an RSS feed for the changelog.
