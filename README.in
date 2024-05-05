@@ -87,6 +87,10 @@ The `overviewFile` parameter specifies an XHTML
 file that will be inserted into the `overview` section of
 the generated site.
 
+The `documentationFile` parameter specifies an XHTML
+file that will be inserted into the `documentation` section of
+the generated site.
+
 The `featuresFile` parameter specifies an XHTML
 file that will be inserted into the `features` section of
 the generated site.
@@ -117,13 +121,3 @@ is optional and defaults to `true`.
 
 The `cssStyles` parameter specifies a list of
 CSS styles that should be imported by the generated site.
-
-The `documentation` parameter specifies documentation.
-It takes a list of `DocumentationItem` values as
-parameters. Each `DocumentationItem` specifies a
-name and a list of `DocumentationFormat` values. Each
-`DocumentationFormat` value specifies a format name
-and a path. The usage example above specifies a single documentation item that
-has three formats: Single-page XHTML placed at `/documentation/index.xhtml`,
-multi-page XHTML placed at `/documentation/index-m.xhtml`,
-and plain text placed at `/documentation/main.txt`.
