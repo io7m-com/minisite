@@ -93,7 +93,7 @@ the generated site.
 
 The `headerFile` parameter specifies an XHTML
 file that will be inserted into the header section of the generated site
-"(" above the logo and title ")".
+(above the logo and title).
 
 The `changelogFile` parameter specifies an XML
 changelog in [changelog](https://www.io7m.com/software/changelog)
