@@ -33,7 +33,7 @@
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
     <com.io7m.changelog.version>4.1.0</com.io7m.changelog.version>
-    <io7m.maven-api.version>3.9.6</io7m.maven-api.version>
+    <io7m.maven-api.version>3.9.7</io7m.maven-api.version>
     <io7m.org.immutables.version>2.10.1</io7m.org.immutables.version>
   </properties>
 
