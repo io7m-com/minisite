@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.minisite</groupId>
     <artifactId>com.io7m.minisite</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>5.1.0</version>
   </parent>
 
   <artifactId>com.io7m.minisite.maven_plugin</artifactId>
