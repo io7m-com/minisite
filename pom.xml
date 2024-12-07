@@ -9,32 +9,31 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.lite</artifactId>
-    <version>8.2.0</version>
+    <version>8.3.1</version>
   </parent>
 
   <groupId>com.io7m.minisite</groupId>
   <artifactId>com.io7m.minisite</artifactId>
-  <version>5.0.0</version>
+  <version>5.1.0</version>
   <packaging>pom</packaging>
 
   <name>com.io7m.minisite</name>
   <description>Tiny site generator for Maven projects</description>
-  <url>https://www.github.com/io7m/minisite</url>
+  <url>https://www.github.com/io7m-com/minisite</url>
 
   <modules>
     <module>com.io7m.minisite.core</module>
     <module>com.io7m.minisite.tests</module>
-    <module>com.io7m.minisite.documentation</module>
     <module>com.io7m.minisite.maven_plugin</module>
   </modules>
 
   <properties>
     <!-- Configuration. -->
-    <io7m.api.previousVersion>4.0.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>5.0.0</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
-    <com.io7m.changelog.version>4.1.0</com.io7m.changelog.version>
-    <io7m.maven-api.version>3.9.6</io7m.maven-api.version>
+    <com.io7m.changelog.version>5.0.0-beta0002</com.io7m.changelog.version>
+    <io7m.maven-api.version>3.9.9</io7m.maven-api.version>
     <io7m.org.immutables.version>2.10.1</io7m.org.immutables.version>
   </properties>
 
@@ -48,9 +47,9 @@
   </licenses>
 
   <scm>
-    <url>https://www.github.com/io7m/minisite</url>
-    <connection>scm:git:https://www.github.com/io7m/minisite</connection>
-    <developerConnection>scm:git:https://www.github.com/io7m/minisite</developerConnection>
+    <url>https://www.github.com/io7m-com/minisite</url>
+    <connection>scm:git:https://www.github.com/io7m-com/minisite</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/minisite</developerConnection>
   </scm>
 
   <developers>
@@ -63,7 +62,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://www.github.com/io7m/minisite/issues</url>
+    <url>https://www.github.com/io7m-com/minisite/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -85,7 +84,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://www.github.com/minisite/actions</url>
+    <url>https://www.github.com/io7m-com/minisite/actions</url>
   </ciManagement>
 
   <prerequisites>
@@ -97,12 +96,12 @@
       <dependency>
         <groupId>com.io7m.primogenitor</groupId>
         <artifactId>com.io7m.primogenitor.support</artifactId>
-        <version>8.2.0</version>
+        <version>8.3.1</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.2</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.changelog</groupId>
@@ -127,7 +126,7 @@
       <dependency>
         <groupId>com.io7m.jlexing</groupId>
         <artifactId>com.io7m.jlexing.core</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
@@ -142,12 +141,12 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.5.6</version>
+        <version>1.5.12</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.13</version>
+        <version>2.0.16</version>
       </dependency>
       <dependency>
         <groupId>org.immutables</groupId>
@@ -167,7 +166,7 @@
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.12.0</version>
+        <version>3.15.1</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -199,7 +198,7 @@
       <dependency>
         <groupId>io.takari.maven.plugins</groupId>
         <artifactId>takari-plugin-testing</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.5</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -230,13 +229,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.12.0</version>
+          <version>3.15.1</version>
         </plugin>
 
         <plugin>
           <groupId>io.takari.maven.plugins</groupId>
           <artifactId>takari-lifecycle-plugin</artifactId>
-          <version>2.1.4</version>
+          <version>2.2.0</version>
         </plugin>
 
         <!-- KStructural Maven Plugin -->
@@ -262,7 +261,7 @@
       <plugin>
         <groupId>com.io7m.minisite</groupId>
         <artifactId>com.io7m.minisite.maven_plugin</artifactId>
-        <version>5.0.0-beta0001</version>
+        <version>5.0.0</version>
         <inherited>false</inherited>
         <executions>
           <execution>
