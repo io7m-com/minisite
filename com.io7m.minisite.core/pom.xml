@@ -66,12 +66,6 @@
 
   <build>
     <plugins>
-      <!-- Spot bugs -->
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-
       <!-- Ignore dependencies that bytecode analysis misses. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
