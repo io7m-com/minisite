@@ -34,7 +34,7 @@
 
     <com.io7m.changelog.version>5.0.0-beta0002</com.io7m.changelog.version>
     <io7m.maven-api.version>3.9.11</io7m.maven-api.version>
-    <io7m.org.immutables.version>2.11.4</io7m.org.immutables.version>
+    <io7m.org.immutables.version>2.11.6</io7m.org.immutables.version>
   </properties>
 
   <inceptionYear>2017</inceptionYear>
